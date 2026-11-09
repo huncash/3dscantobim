@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">HelyQrzQ: minta-anyag</title>
+  <desc id="d">Rajzlap egy késQbbi minta-anyag számára, nem valós projekt képe.</desc>
+  <rect width="960" height="540" fill="#e7eef5"/>
+  <rect x="28" y="28" width="904" height="484" fill="#f7f9fb" stroke="#1f4e79" stroke-width="2"/>
+  <rect x="80" y="180" width="240" height="220" fill="none" stroke="#1f4e79" stroke-width="2"/>
+  <rect x="360" y="180" width="240" height="220" fill="none" stroke="#1f4e79" stroke-width="2"/>
+  <rect x="640" y="180" width="240" height="220" fill="none" stroke="#1f4e79" stroke-width="2"/>
+  <text x="100" y="230" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="18">E57</text>
+  <text x="100" y="270" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">nyílt pontfelhQ</text>
+  <text x="380" y="230" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="18">REVIT / ARCHICAD</text>
+  <text x="380" y="270" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">a partner szoftvere</text>
+  <text x="660" y="230" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="18">JEGYZPKÖNYV</text>
+  <text x="660" y="270" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">lefedettség, kizárás</text>
+  <text x="56" y="78" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="22">HELYPRZP · MINTA-ANYAG</text>
+  <text x="56" y="108" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="16">A minta rövid szemelvény, nem teljes épület.</text>
+</svg>

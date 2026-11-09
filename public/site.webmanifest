@@ -1,0 +1,12 @@
+{
+  "name": "3dscantobim.hu",
+  "short_name": "3dscantobim",
+  "lang": "hu",
+  "start_url": "/",
+  "display": "browser",
+  "background_color": "#e8edf2",
+  "theme_color": "#152033",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

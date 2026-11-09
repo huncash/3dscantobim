@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">HelyQrzQ: épületfelmérés</title>
+  <desc id="d">Rajzlap egy késQbbi helyszíni fotó számára, nem valós projekt képe.</desc>
+  <rect width="960" height="540" fill="#e7eef5"/>
+  <rect x="28" y="28" width="904" height="484" fill="#f7f9fb" stroke="#1f4e79" stroke-width="2"/>
+  <path d="M28 56h28M28 28v28M932 28v28M904 28h28M28 512v-28M28 512h28M932 484v28M904 512h28" fill="none" stroke="#1f4e79" stroke-width="2"/>
+  <path d="M180 390V210l150-80 150 80v180" fill="none" stroke="#1f4e79" stroke-width="3"/>
+  <path d="M180 280h300M330 130v260" fill="none" stroke="#234e70" stroke-width="1.5"/>
+  <circle cx="330" cy="280" r="5" fill="#9a4e24"/>
+  <text x="56" y="78" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="22">HELYPRZP · ÉPÜLETFELMÉRÉS</text>
+  <text x="56" y="108" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="16">Ide késQbb valós helyszíni fotó kerül.</text>
+  <text x="520" y="430" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="14">3dscantobim.hu · nem projektfotó</text>
+</svg>

@@ -1,0 +1,18 @@
+[Unit]
+Description=3dscantobim.hu – terepi felmérés és pontfelh?
+After=network.target
+
+[Service]
+Type=simple
+User=scantobim
+Group=scantobim
+WorkingDirectory=/var/www/site-7
+EnvironmentFile=/var/www/site-7/.env
+ExecStart=/usr/bin/node src/server.js
+Restart=always
+RestartSec=5
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

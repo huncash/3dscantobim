@@ -1,0 +1,19 @@
+{
+  "name": "3dscantobim",
+  "version": "1.0.0",
+  "private": true,
+  "description": "3dscantobim.hu – terepi felmérés és pontfelhő BIM-modellező csapatoknak",
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "test": "node --test",
+    "og": "node scripts/make-og.js"
+  },
+  "dependencies": {
+    "express": "^4.21.2",
+    "nodemailer": "^10.4.0"
+  }
+}

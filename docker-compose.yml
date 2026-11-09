@@ -1,0 +1,25 @@
+services:
+  scantobim:
+    build: .
+    container_name: 3dscantobim
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      PORT: "7000"
+      BIND_HOST: "0.0.0.0"
+      DATA_FILE: /app/data/leads.sqlite
+      NODE_ENV: production
+    ports:
+      - "127.0.0.1:7000:7000"
+    volumes:
+      - scantobim_data:/app/data
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "5"
+
+volumes:
+  scantobim_data:
+    name: scantobim7_data

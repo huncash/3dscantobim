@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">HelyQrzQ: ipari tér</title>
+  <desc id="d">Rajzlap egy késQbbi ipari vagy gépészeti fotó számára, nem valós projekt képe.</desc>
+  <rect width="960" height="540" fill="#e7eef5"/>
+  <rect x="28" y="28" width="904" height="484" fill="#f7f9fb" stroke="#1f4e79" stroke-width="2"/>
+  <path d="M120 400h520M160 400V230h120v170M340 400V180h160v220M560 400V250h80v150" fill="none" stroke="#1f4e79" stroke-width="3"/>
+  <path d="M180 250h80M360 220h120M360 260h120" fill="none" stroke="#234e70" stroke-width="2"/>
+  <circle cx="250" cy="300" r="5" fill="#9a4e24"/>
+  <circle cx="430" cy="300" r="5" fill="#9a4e24"/>
+  <text x="56" y="78" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="22">HELYPRZP · IPARI ÉS GÉPÉSZETI TÉR</text>
+  <text x="56" y="108" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="16">Ide késQbb valós csarnok- vagy gépházfotó kerül.</text>
+  <text x="520" y="460" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="14">3dscantobim.hu · nem projektfotó</text>
+</svg>

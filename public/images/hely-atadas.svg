@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 540" role="img" aria-labelledby="t d">
+  <title id="t">HelyQrzQ: pontfelhQ átadás</title>
+  <desc id="d">Rajzlap egy késQbbi átadási szemelvény számára, nem valós projekt képe.</desc>
+  <rect width="960" height="540" fill="#e7eef5"/>
+  <rect x="28" y="28" width="904" height="484" fill="#f7f9fb" stroke="#1f4e79" stroke-width="2"/>
+  <g fill="#1f4e79">
+    <circle cx="180" cy="220" r="3"/><circle cx="210" cy="240" r="3"/><circle cx="250" cy="210" r="3"/>
+    <circle cx="290" cy="250" r="3"/><circle cx="330" cy="230" r="3"/><circle cx="370" cy="260" r="3"/>
+    <circle cx="410" cy="220" r="3"/><circle cx="450" cy="245" r="3"/><circle cx="490" cy="215" r="3"/>
+    <circle cx="230" cy="300" r="3"/><circle cx="280" cy="320" r="3"/><circle cx="340" cy="305" r="3"/>
+    <circle cx="400" cy="330" r="3"/><circle cx="460" cy="310" r="3"/>
+  </g>
+  <rect x="560" y="180" width="300" height="220" fill="none" stroke="#1f4e79" stroke-width="2"/>
+  <text x="576" y="214" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="16">FORMÁTUM · E57</text>
+  <text x="576" y="246" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">EGYSÉG · a brief szerint</text>
+  <text x="576" y="278" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">KOORDINÁTA · rögzített</text>
+  <text x="576" y="310" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="15">KIZÁRÁS · külön sor</text>
+  <text x="576" y="360" fill="#9a4e24" font-family="Segoe UI, Arial, sans-serif" font-size="15">MODELL · külön csomag</text>
+  <text x="56" y="78" fill="#152033" font-family="Segoe UI, Arial, sans-serif" font-size="22">HELYPRZP · PONTFELHP ÁTADÁS</text>
+  <text x="56" y="108" fill="#526070" font-family="Segoe UI, Arial, sans-serif" font-size="16">Ide késQbb valós szemelvény vagy képernyQkép kerül.</text>
+</svg>
