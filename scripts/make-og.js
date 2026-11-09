@@ -82,7 +82,7 @@ const title = '3D SCAN TO BIM';
 drawText(title, 96, 190, 6, [21, 32, 51]);
 drawText('TEREPI FELMERES', 96, 270, 4, [31, 78, 121]);
 drawText('PONTFELHO ATADAS', 96, 320, 4, [31, 78, 121]);
-drawText('ADP-TOP KFT.', 96, 390, 3, [154, 78, 36]);
+drawText('EGYEZTETETT ATADAS', 96, 390, 3, [154, 78, 36]);
 
 const rand = (() => {
   let seed = 42;

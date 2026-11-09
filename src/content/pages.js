@@ -8,7 +8,7 @@ const PAGES = {
     path: '/',
     title: 'Terepi felmérés és pontfelhő BIM-csapatoknak | 3dscantobim.hu',
     description:
-      'BIM-modellezőknek és tervezőirodáknak: terepi felmérés, rögzített pontfelhő-átadás. A Scan-to-BIM külön munkacsomag. Az ADP-TOP Kft. mérnöki csapata.',
+      'BIM-modellezőknek és tervezőirodáknak: terepi felmérés, rögzített pontfelhő-átadás. A Scan-to-BIM külön munkacsomag.',
     crumb: 'Főoldal',
   },
   field: {
@@ -78,15 +78,22 @@ const PAGES = {
     path: '/adatvedelem',
     title: 'Adatkezelési tájékoztató | 3dscantobim.hu',
     description:
-      'Hogyan kezeli az ADP-TOP Kft. a 3dscantobim.hu projektigény űrlapján megadott partneri adatokat.',
+      'Hogyan kezeli a 3dscantobim.hu a projektigény űrlapján megadott partneri adatokat. Az adatkezelő azonosítása a tájékoztatóban szerepel.',
     crumb: 'Adatvédelem',
   },
   impressum: {
     path: '/impresszum',
     title: 'Impresszum | 3dscantobim.hu',
     description:
-      'A 3dscantobim.hu üzemeltetője az ADP-TOP Kereskedelmi és Szolgáltató Kft. Céginformáció és elérhetőség.',
+      'A 3dscantobim.hu szolgáltatójának azonosító adatai és elérhetősége. Az üzemeltető adatai az ÁSZF-ben is szerepelnek.',
     crumb: 'Impresszum',
+  },
+  terms: {
+    path: '/aszf',
+    title: 'ÁSZF, üzemeltető adatai | 3dscantobim.hu',
+    description:
+      'A 3dscantobim.hu üzemeltetőjének azonosító adatai. A projektigény elküldése nem hoz létre szerződést.',
+    crumb: 'ÁSZF',
   },
   articles: {
     path: '/cikkek',
@@ -236,7 +243,6 @@ function renderHome({ formHtml }) {
   </section>
   <section class="section">
     <div class="wrap trust">
-      <p class="trust-line">A megoldást az ADP-TOP Kft. mérnöki csapata biztosítja.</p>
       <p>A terepi munkát és az átadást a rögzített specifikáció szerint végezzük. Nem vállalunk földhivatali vagy hatósági záradékolást, és nem állítjuk, hogy minden helyszíni helyzet ugyanazzal a módszerrel lezárható.</p>
     </div>
   </section>
@@ -504,13 +510,14 @@ function renderContact({ formHtml, config }) {
   <div class="wrap contact-grid">
     <div class="prose">
       <h2>Elérhetőség</h2>
-      <p>${esc(config.companyLegalName)}<br>${esc(config.companySeat)}</p>
-      <p><a href="mailto:${esc(email)}">${esc(email)}</a><br><a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a></p>
+      <p><a href="mailto:${esc(email)}">${esc(email)}</a></p>
+      <p><a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a></p>
+      <p>Telefonon hétfőtől péntekig, 8:00 és 19:00 között hívhat.</p>
       <p>A levélben vagy az űrlapon írja meg a helyszínt és a kért kimenetet. Telefonon a hozzáférést és az ütemet lehet pontosítani, árat szóban, adatok nélkül nem mondunk.</p>
       <p>A Scan-to-BIM modell külön, egyeztetett szolgáltatás, nem része automatikusan minden felmérési megbízásnak. Ha modellezés is szóba jön, az űrlap projekt típusánál ezt válassza.</p>
     </div>
-    <div id="igeny">
-      <h2>Felmérési specifikáció</h2>
+    <div id="projektigeny">
+      <h2 id="igeny">Felmérési specifikáció</h2>
       ${formHtml}
     </div>
   </div>`;
@@ -532,7 +539,8 @@ function renderPrivacy(config) {
   <div class="wrap prose">
     <p>Ez a tájékoztató a 3dscantobim.hu oldal partneri projektigényeire vonatkozik. Nem helyettesíti egy konkrét megbízás külön adatfeldolgozói megállapodását, ha a helyszíni munka során további, a felmérési állományra vonatkozó adat keletkezik. Azt a megbízás rögzíti.</p>
     <h2>Adatkezelő</h2>
-    <p>${esc(config.companyLegalName)}<br>${esc(config.companySeat)}<br>Cégjegyzékszám: ${esc(config.companyRegNumber)}<br>Adószám: ${esc(config.companyTaxId)}<br>E-mail: <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a></p>
+    <p>${esc(config.companyLegalName)}<br>${esc(config.companySeat)}<br>Cégjegyzékszám: ${esc(config.companyRegNumber)}<br>Adószám: ${esc(config.companyTaxId)}<br>E-mail: <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a><br>Telefon: <a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a>, hétfőtől péntekig, 8:00 és 19:00 között.</p>
+    <p>Az üzemeltető azonosító adatai az <a href="/aszf">ÁSZF</a> Üzemeltető adatai részében is szerepelnek.</p>
     <h2>Milyen adatot rögzítünk</h2>
     <p>Az űrlap és a technikai környezet az alábbiakat menti: beküldés időpontja, forrásdomain, forrás URL, kampány és UTM paraméterek, partner neve, kapcsolattartó, e-mail, telefon, cég, projekt típusa, épület típusa, helyszín, tervezett ütemezés, kért kimenet, szoftver, koordinátarendszer, pontossági igény, fájlméret, megjegyzés, a hozzájárulás ténye, valamint a megkeresés státusza. Fájlt az űrlap nem fogad. Az IP-címet az adatbázisba nem írjuk. A napló a kérés idejét, a HTTP-módszert, az útvonalat és az állapotkódot tartalmazza, a mezők szövegét nem.</p>
     <h2>Cél és jogalap</h2>
@@ -559,13 +567,38 @@ function renderImpressum(config) {
     Cégjegyzékszám: ${esc(config.companyRegNumber)}<br>
     Bejegyezve: ${esc(config.companyCourt)}<br>
     Adószám: ${esc(config.companyTaxId)}<br>
-    EU adószám: ${esc(config.companyEuTaxId)}<br>
-    Főtevékenység a cégjegyzék szerint: ${esc(config.companyActivity)}</p>
+    EU adószám: ${esc(config.companyEuTaxId)}</p>
     <p>E-mail: <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a><br>
-    Telefon: <a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a></p>
-    <p>A terepi felmérést és a pontfelhő-átadást az ADP-TOP Kft. mérnöki csapata biztosítja. Az oldal tájékoztat és projektigényt fogad. Nem minősül ajánlattételnek, nem köt szerződést, és nem kezel fizetést.</p>
+    Telefon: <a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a><br>
+    Telefonon hétfőtől péntekig, 8:00 és 19:00 között hívhat.</p>
+    <p>Az oldal tájékoztat és projektigényt fogad. Nem minősül ajánlattételnek, nem köt szerződést, és nem kezel fizetést. Az üzemeltető adatai az <a href="/aszf">ÁSZF</a> azonos szakaszában is olvashatók.</p>
     ${hosting}
     <p>Kapcsolódó mérnöki felület, ettől az oldaltól külön tartalommal: <a href="https://bim.vrgo.hu/" rel="noopener">bim.vrgo.hu</a>.</p>
+  </div>`;
+}
+
+function renderTerms(config) {
+  const phoneHref = String(config.contactPhone || '').replace(/[^\d+]/g, '');
+  return `
+  ${pageHead(
+    'ÁSZF',
+    'Általános szerződési feltételek',
+    'Az oldal üzemeltetőjének azonosító adatai. A projektigény elküldése nem hoz létre szerződést.'
+  )}
+  <div class="wrap prose">
+    <h2>Üzemeltető adatai</h2>
+    <p><strong>${esc(config.companyLegalName)}</strong><br>
+    Székhely: ${esc(config.companySeat)}<br>
+    Cégjegyzékszám: ${esc(config.companyRegNumber)}<br>
+    Bejegyezve: ${esc(config.companyCourt)}<br>
+    Adószám: ${esc(config.companyTaxId)}<br>
+    EU adószám: ${esc(config.companyEuTaxId)}</p>
+    <p>E-mail: <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a><br>
+    Telefon: <a href="tel:${esc(phoneHref)}">${esc(config.contactPhone)}</a><br>
+    Telefonon hétfőtől péntekig, 8:00 és 19:00 között hívhat.</p>
+    <h2>Az oldal szerepe</h2>
+    <p>A 3dscantobim.hu tájékoztat és projektigényt fogad. Az űrlap elküldése nem ajánlat, nem szerződés, és nem keletkeztet fizetési kötelezettséget. A megbízás feltételeit a felek külön, írásban rögzítik, ha a specifikációból a feladat megállapítható.</p>
+    <p>Az adatkezelés rendje az <a href="/adatvedelem">adatkezelési tájékoztatóban</a> van.</p>
   </div>`;
 }
 
@@ -642,6 +675,7 @@ module.exports = {
   renderContact,
   renderPrivacy,
   renderImpressum,
+  renderTerms,
   renderArticlesIndex,
   renderArticle,
   renderThanks,

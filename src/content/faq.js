@@ -45,7 +45,7 @@ const FAQ = [
   },
   {
     q: 'Ki kezeli a beküldött adatokat?',
-    a: 'Az adatkezelő az ADP-TOP Kft. A projektigényt a megkeresés megválaszolásához használjuk, hírlevelet nem küldünk. A részletek az adatkezelési tájékoztatóban vannak.',
+    a: 'A projektigényt a megkeresés megválaszolásához használjuk, hírlevelet nem küldünk. Az adatkezelő azonosító adatai az adatkezelési tájékoztatóban, az üzemeltető adatai az ÁSZF-ben vannak.',
   },
 ];
 

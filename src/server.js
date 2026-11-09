@@ -20,6 +20,7 @@ const {
 const {
   page,
   organizationLd,
+  operatorLd,
   professionalServiceLd,
   faqLd,
   articleLd,
@@ -166,6 +167,7 @@ function createApp(options = {}) {
       pages.PAGES.faq,
       pages.PAGES.contact,
       pages.PAGES.privacy,
+      pages.PAGES.terms,
       pages.PAGES.impressum,
       pages.PAGES.articles,
       ...ARTICLES,
@@ -253,7 +255,17 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: pages.PAGES.impressum,
       body: pages.renderImpressum(config),
-      jsonLd: [graph([organizationLd(config)])],
+      jsonLd: [graph([operatorLd(config)])],
+    }));
+  });
+
+  app.get('/aszf', (req, res) => {
+    send(res, 200, page({
+      config,
+      nonce: res.locals.nonce,
+      meta: pages.PAGES.terms,
+      body: pages.renderTerms(config),
+      jsonLd: [graph([operatorLd(config)])],
     }));
   });
 

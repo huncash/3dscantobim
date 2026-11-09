@@ -90,7 +90,8 @@ p { margin: 0 0 0.85em; }
   padding: 8px 0;
 }
 .utility p { margin: 0; }
-.utility-links { display: flex; gap: 14px; flex-wrap: wrap; }
+.utility-links { display: flex; gap: 8px 14px; flex-wrap: wrap; align-items: center; }
+.hours { color: #d5deea; }
 .header-main {
   display: flex;
   align-items: center;
@@ -288,10 +289,29 @@ th, td { border-bottom: 1px solid var(--line); padding: 8px; text-align: left; v
 .footer-grid { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 22px; }
 .site-footer ul { list-style: none; margin: 0; padding: 0; }
 .site-footer li { margin: 0.25em 0; }
-.legal-line { border-top: 1px solid rgba(255, 255, 255, 0.15); margin-top: 18px; padding: 12px 0 4px; font-size: 0.88rem; }
+.legal-links, .legal-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 20px;
+  font-size: 0.92rem;
+  line-height: 1.4;
+  color: #e7eef5;
+}
+.legal-links { border-top: 1px solid rgba(255, 255, 255, 0.15); margin-top: 16px; padding-top: 4px; }
+.legal-bar { padding-bottom: 4px; }
+.legal-links a, .legal-bar a { min-height: 44px; display: inline-flex; align-items: center; }
+.phone-slot { display: inline-flex; flex-wrap: wrap; gap: 6px 10px; align-items: center; }
+.footer-logo {
+  width: 120px;
+  height: auto;
+  aspect-ratio: 239 / 108;
+  display: block;
+  flex: 0 0 auto;
+}
 
 :focus-visible { outline: 2px solid var(--steel); outline-offset: 2px; }
-#specifikacio, #igeny, #ipari-gepeszet { scroll-margin-top: 108px; }
+#specifikacio, #igeny, #projektigeny, #ipari-gepeszet { scroll-margin-top: 200px; }
 
 @media (max-width: 980px) {
   .hero-grid, .cards, .cards-2, .steps, .contact-grid, .footer-grid, .cta-inner { grid-template-columns: 1fr; display: grid; }
@@ -303,6 +323,12 @@ th, td { border-bottom: 1px solid var(--line); padding: 8px; text-align: left; v
 }
 
 @media (max-width: 720px) {
+  .footer-logo {
+    flex: 0 0 120px;
+    width: 120px;
+    max-width: 120px;
+    margin-right: calc(100% - 120px);
+  }
   .form-grid, .titleblock dl, .def { grid-template-columns: 1fr; }
   .span-2 { grid-column: auto; }
   .titleblock dt { padding-bottom: 0; border-top: 1px solid var(--line); }

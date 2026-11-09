@@ -16,11 +16,17 @@ function organizationLd(config) {
   return {
     '@type': 'Organization',
     '@id': `${config.siteUrl}/#szervezet`,
-    name: config.companyShortName,
-    legalName: config.companyLegalName,
+    name: config.siteName,
     url: config.siteUrl,
     email: safeEmail(config.contactEmail) || undefined,
     telephone: config.contactPhone || undefined,
+  };
+}
+
+function operatorLd(config) {
+  return {
+    ...organizationLd(config),
+    legalName: config.companyLegalName,
     taxID: config.companyTaxId,
     vatID: config.companyEuTaxId,
     address: {
@@ -43,7 +49,6 @@ function professionalServiceLd(config) {
     telephone: config.contactPhone || undefined,
     email: safeEmail(config.contactEmail) || undefined,
     areaServed: { '@type': 'Country', name: 'Magyarország' },
-    address: organizationLd(config).address,
     provider: { '@id': `${config.siteUrl}/#szervezet` },
     knowsAbout: [
       'Scan-to-BIM',
@@ -89,7 +94,7 @@ function articleLd(config, article) {
     datePublished: article.published,
     dateModified: article.published,
     mainEntityOfPage: `${config.siteUrl}${article.path}`,
-    author: { '@type': 'Organization', name: config.companyShortName },
+    author: { '@type': 'Organization', name: config.siteName },
     publisher: { '@id': `${config.siteUrl}/#szervezet` },
     image: `${config.siteUrl}/images/og.png`,
   };
@@ -164,12 +169,12 @@ function layout({
   <header class="site-header">
     <div class="topbar">
       <div class="wrap utility">
-        <p>${esc(config.companyShortName)} · terepi felmérés és pontfelhő</p>
+        <p>3dscantobim · terepi felmérés és pontfelhő</p>
         <p class="utility-links">
           <a href="/cikkek">Tudnivalók</a>
           <a href="/gyik">GYIK</a>
           <a href="/kapcsolat">Kapcsolat</a>
-          ${phoneHref ? `<a href="${esc(phoneHref)}">${esc(config.contactPhone)}</a>` : ''}
+          ${phoneHref ? `<a href="${esc(phoneHref)}">${esc(config.contactPhone)}</a><span class="hours">H–P 8:00–19:00</span>` : ''}
         </p>
       </div>
     </div>
@@ -205,7 +210,6 @@ function layout({
       <section>
         <h2>3dscantobim.hu</h2>
         <p>Terepi felmérés és egyeztetett pontfelhő-átadás BIM-modellező csapatoknak. A modell külön munkacsomag, ha kérik.</p>
-        <p>${esc(config.companyLegalName)}<br>${esc(config.companySeat)}</p>
       </section>
       <section>
         <h2>Szolgáltatás</h2>
@@ -230,18 +234,25 @@ function layout({
         </ul>
       </section>
       <section>
-        <h2>Cég</h2>
+        <h2>Kapcsolat</h2>
         <ul>
           ${email ? `<li><a href="mailto:${esc(email)}">${esc(email)}</a></li>` : ''}
-          ${phoneHref ? `<li><a href="${esc(phoneHref)}">${esc(config.contactPhone)}</a></li>` : ''}
-          <li><a href="/adatvedelem">Adatkezelési tájékoztató</a></li>
-          <li><a href="/impresszum">Impresszum</a></li>
+          ${phoneHref ? `<li><a href="${esc(phoneHref)}">${esc(config.contactPhone)}</a> <span class="hours">H–P 8:00–19:00</span></li>` : ''}
           <li><a href="https://bim.vrgo.hu/" rel="noopener">Kapcsolódó felület: bim.vrgo.hu</a></li>
         </ul>
       </section>
     </div>
-    <div class="wrap legal-line">
-      <p>© ${new Date().getFullYear()} ${esc(config.companyShortName)} Az oldal tájékoztat és projektigényt fogad. Nem köt szerződést, nem számít árat, és nem kezel fizetést.</p>
+    <div class="wrap legal-links">
+      <a href="/aszf">ÁSZF</a>
+      <a href="/adatvedelem">Adatkezelési tájékoztató</a>
+      <a href="/impresszum">Impresszum</a>
+    </div>
+    <div class="wrap legal-bar">
+      <img class="footer-logo" src="/images/adp-top-logo.png" alt="ADP-TOP" width="239" height="108">
+      <span>2016–2026 (R) Minden jog fenntartva.</span>
+      <a href="/">3dscantobim.hu</a>
+      <a href="/kapcsolat#projektigeny">Írjon nekünk</a>
+      ${phoneHref ? `<span class="phone-slot"><a href="${esc(phoneHref)}">${esc(config.contactPhone)}</a><span>Telefonon: H–P 8:00–19:00</span></span>` : ''}
     </div>
   </footer>
   <script src="/js/site.js?v=${esc(config.assetVersion)}" defer></script>
@@ -277,6 +288,7 @@ function page({ config, nonce, meta, body, crumbs, jsonLd, robots, ogType }) {
 module.exports = {
   layout,
   page,
+  operatorLd,
   organizationLd,
   professionalServiceLd,
   breadcrumbLd,

@@ -97,7 +97,12 @@ test('a főoldal a kért üzenetet és a három szolgáltatást mutatja', async 
   assert.match(body, /E57 vagy más pontfelhő formátum/);
   assert.match(body, /Ellenőrzött felmérési dokumentáció/);
   assert.match(body, /Egyeztetett Scan-to-BIM munkacsomag/);
-  assert.match(body, /A megoldást az ADP-TOP Kft\. mérnöki csapata biztosítja\./);
+  assert.match(body, /2016–2026 \(R\) Minden jog fenntartva\./);
+  assert.match(body, /<a href="\/">3dscantobim\.hu<\/a>/);
+  assert.match(body, /<a href="\/kapcsolat#projektigeny">Írjon nekünk<\/a>/);
+  assert.match(body, /Telefonon: H–P 8:00–19:00/);
+  assert.match(body, /<img class="footer-logo" src="\/images\/adp-top-logo\.png" alt="ADP-TOP" width="239" height="108">/);
+  assert.doesNotMatch(body, /ADP-TOP Kft|Híradó utca|4712|Főtevékenység/);
   assert.match(body, /https:\/\/bim\.vrgo\.hu\//);
   assert.match(body, /property="og:title"/);
   assert.match(body, /name="twitter:card"/);
@@ -122,6 +127,7 @@ test('a nyilvános oldalak és a cikkek válaszolnak', async () => {
     '/gyik',
     '/kapcsolat',
     '/adatvedelem',
+    '/aszf',
     '/impresszum',
     '/cikkek',
     '/cikkek/mit-varjon-egy-bim-modellezo-a-terepi-felmerestol',
@@ -140,6 +146,23 @@ test('a nyilvános oldalak és a cikkek válaszolnak', async () => {
   }
   const scan = await text('/scan-to-bim');
   assert.match(scan.body, /nem része automatikusan minden felmérési megbízásnak/);
+  assert.doesNotMatch(scan.body, /ADP-TOP Kft|Híradó utca/);
+  assert.match(scan.body, /alt="ADP-TOP"/);
+  const article = await text('/cikkek/pontfelho-ifc-es-revit');
+  assert.doesNotMatch(article.body, /ADP-TOP Kft|Híradó utca/);
+  const contact = await text('/kapcsolat');
+  assert.match(contact.body, /id="projektigeny"/);
+  assert.match(contact.body, /Telefonon hétfőtől péntekig, 8:00 és 19:00 között hívhat\./);
+  assert.match(contact.body, /href="tel:\+36306672510"/);
+  assert.doesNotMatch(contact.body, /ADP-TOP Kft|Híradó utca|ügyfélfogadás/);
+  const terms = await text('/aszf');
+  assert.match(terms.body, /Üzemeltető adatai/);
+  assert.match(terms.body, /ADP-TOP Kereskedelmi és Szolgáltató Kft\./);
+  assert.match(terms.body, /Híradó utca 29/);
+  assert.doesNotMatch(terms.body, /4712|Főtevékenység|Iparcikk jellegű vegyes kiskereskedelem/);
+  const privacy = await text('/adatvedelem');
+  assert.match(privacy.body, /<h2>Adatkezelő<\/h2>/);
+  assert.match(privacy.body, /ADP-TOP Kereskedelmi és Szolgáltató Kft\./);
   const sample = await text('/kapcsolat?igeny=minta');
   assert.match(sample.body, /Minta-anyag kérése/);
 });
