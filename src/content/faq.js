@@ -17,7 +17,7 @@ const FAQ = [
   },
   {
     q: 'Milyen formátumban érkezik a pontfelhő?',
-    a: 'A szokásos nyílt átadás az E57. Ha a partner munkafolyamata más exportot kér, például Autodesk-környezethez, azt a briefben néven nevezzük. A formátum, az egység és a koordinátarendszer az átadás része, nem utólagos találgatás.',
+    a: 'A szokásos nyílt pontfelhő az E57. Az E57 nem BIM-modell. Az IFC csereformátum, nem pontfelhő. Szoftverhez előkészített vagy natív állományt csak akkor nevezünk meg, ha az a munkafolyamat ellenőrzött és a specifikáció külön rögzíti.',
   },
   {
     q: 'Revitben vagy Archicadben dolgoznak?',
@@ -33,7 +33,7 @@ const FAQ = [
   },
   {
     q: 'Kérhetek minta-anyagot a saját szoftveremhez?',
-    a: 'Igen. A minta rövid szemelvény és formátumjegyzet, hogy a saját Revit-, Archicad- vagy pontfelhő-eszközében megnézze az átadást. Nem teljes épület, és nem helyettesíti a projekt specifikációját.',
+    a: 'Letölthető mintaállomány jelenleg nincs, és az oldal nem ajánl fel fájlt. A formátumot az átadási specifikációban egyeztetjük. Az E57 pontfelhő, nem kész modell.',
   },
   {
     q: 'Ez helyettesíti a saját modellező csapatunkat?',
@@ -41,7 +41,7 @@ const FAQ = [
   },
   {
     q: 'Nagy fájlt is át tudnak adni?',
-    a: 'Az átadás módját a becsült mérethez igazítjuk. Több tíz gigabájt nem e-mail melléklet. Az űrlapon ezért kérjük a nagyságrendet, a pontos csatornát pedig a specifikációban rögzítjük.',
+    a: 'Az első űrlap nem kér becsült fájlméretet, és pontfelhőt nem fogad. Ha a feladat nagy állományt jelent, az átadás csatornáját a specifikációban rögzítjük.',
   },
   {
     q: 'Ki kezeli a beküldött adatokat?',

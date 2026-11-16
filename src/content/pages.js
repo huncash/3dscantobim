@@ -2,13 +2,14 @@ const { esc } = require('../util');
 const { FAQ, HOME_FAQ } = require('./faq');
 const { ARTICLES } = require('./articles');
 const { ctaBand } = require('../form');
+const { HANDOFF_ITEMS, SERVICE_LEVELS, PENDING_APPROVAL, publicInstrumentClaims } = require('./claims');
 
 const PAGES = {
   home: {
     path: '/',
     title: 'Terepi felmérés és pontfelhő BIM-csapatoknak | 3dscantobim.hu',
     description:
-      'BIM-modellezőknek és tervezőirodáknak: terepi felmérés, rögzített pontfelhő-átadás. A Scan-to-BIM külön munkacsomag.',
+      'Terepi 3D felmérés és egyeztetett pontfelhő-átadás a saját tervezési munkafolyamathoz. A modellkészítés nem automatikus.',
     crumb: 'Főoldal',
   },
   field: {
@@ -22,7 +23,7 @@ const PAGES = {
     path: '/pontfelho-atadas',
     title: 'Pontfelhő átadás E57 és egyeztetett formátumban | 3dscantobim.hu',
     description:
-      'Az átadás formátumot, egységet, koordinátarendszert és ellenőrzési jegyzőkönyvet jelent. A modell nem jár automatikusan a felhő mellé.',
+      'Átadási specifikáció: terület, pontosság, koordináta, regisztráció, formátum és elfogadás. Az E57 pontfelhő, nem BIM-modell.',
     crumb: 'Pontfelhő átadás',
   },
   scan: {
@@ -43,7 +44,7 @@ const PAGES = {
     path: '/minta-anyagok',
     title: 'Minta anyagok és átadási formátumok | 3dscantobim.hu',
     description:
-      'Minta-anyag a partner saját szoftveréhez: rövid szemelvény és formátumjegyzet, nem teljes épület és nem azonnali ár.',
+      'Formátumjegyzet a pontfelhő-átadáshoz. Publikálható mintaállomány és letöltés ezen az oldalon nincs.',
     crumb: 'Minta anyagok',
   },
   process: {
@@ -71,7 +72,7 @@ const PAGES = {
     path: '/kapcsolat',
     title: 'Projektigény és kapcsolat | 3dscantobim.hu',
     description:
-      'Küldje el a felmérési specifikációt, vagy kérjen minta-anyagot. A projektigényt rögzítjük, árat a hiányos adatokra nem ígérünk.',
+      'Projektet egyeztetünk: név, e-mail és rövid leírás. A műszaki adatok opcionálisak, árat az űrlap nem ad.',
     crumb: 'Kapcsolat',
   },
   privacy: {
@@ -142,12 +143,11 @@ function renderHome({ formHtml }) {
     <div class="wrap hero-grid">
       <div>
         <p class="kicker">Partneri terepi kapacitás</p>
-        <h1>Terepi felmérés és pontfelhő a saját modellezési munkafolyamatához</h1>
-        <p class="lede">BIM-modellező csapatoknak és tervezőirodáknak, rögzített átadási specifikációval.</p>
-        <p class="offer">Ön modellez. Mi biztosítjuk a terepi felmérést és az egyeztetett pontfelhő-alapanyagot.</p>
+        <h1>Ön modellez. Mi felmérünk.</h1>
+        <p class="lede">Terepi 3D felmérés és egyeztetett pontfelhő-átadás a saját tervezési munkafolyamatához.</p>
         <div class="actions">
-          <a class="btn" href="#specifikacio">Küldje el a felmérési specifikációt</a>
-          <a class="btn btn-ghost" href="/kapcsolat?igeny=minta#igeny">Kérjen minta-anyagot</a>
+          <a class="btn" href="#specifikacio">Projektet egyeztetek</a>
+          <a class="btn btn-ghost" href="/pontfelho-atadas">Átadási specifikáció</a>
         </div>
       </div>
       <aside class="titleblock" aria-label="Átadási lap, röviden">
@@ -157,10 +157,10 @@ function renderHome({ formHtml }) {
         </header>
         <dl>
           <dt>Kimenet</dt><dd>egyeztetett pontfelhő</dd>
-          <dt>Formátum</dt><dd>E57 vagy a partner szoftvere</dd>
-          <dt>Koordináta</dt><dd>a briefben rögzített rendszer</dd>
+          <dt>Formátum</dt><dd>egyeztetett pontfelhő, jellemzően E57</dd>
+          <dt>Koordináta</dt><dd>a specifikációban rögzített rendszer</dd>
           <dt>Ellenőrzés</dt><dd>lefedettség, illesztés, kizárás</dd>
-          <dt>Modell</dt><dd>csak külön Scan-to-BIM megbízásra</dd>
+          <dt>Modell</dt><dd>nem része a felmérésnek</dd>
         </dl>
       </aside>
     </div>
@@ -172,72 +172,33 @@ function renderHome({ formHtml }) {
   </section>
   <section class="section">
     <div class="wrap">
-      <h2>Miben kérhet terepi kapacitást</h2>
-      <p class="lede">A közönség BIM-modellező csapat, építészeti vagy mérnöki tervezőiroda, generáltervező és nagyobb kivitelező. A modellfelelősség náluk marad, hacsak a modellezést külön csomagban nem kérik.</p>
+      <h2>Három dolog, amit előre tisztázunk</h2>
       <div class="cards">
         <article class="card">
           <p class="index">01</p>
-          <h3>Épületfelmérés és pontfelhő</h3>
-          <p>Meglévő épület bejárása a modellezéshez kért szintekre és homlokzatokra. Az átadás a felhő és a lefedettség leírása, nem egy általános „BIM modell készül” ígéret.</p>
-          <p><a href="/terepi-felmeres">A terepi felmérés</a></p>
+          <h3>Átadási specifikáció</h3>
+          <p>A terület, a pontosság, a koordináta, a formátum és a kizárás a munka előtt kerül a lapra. Nem minden tétel jár az alapfelméréshez.</p>
+          <p><a href="/pontfelho-atadas">Az átadási specifikáció</a></p>
         </article>
         <article class="card">
           <p class="index">02</p>
-          <h3>Ipari és gépészeti tér felmérés</h3>
-          <p>Csarnok, gépház, üzemelő tér. A hozzáférés, a leállás és a takart zónák a specifikáció része. Amit nem lehetett bejárni, azt kizárásként írjuk.</p>
-          <p><a href="/terepi-felmeres#ipari-gepeszet">Ipari és gépészeti tér</a></p>
+          <h3>Pontfelhő a saját folyamathoz</h3>
+          <p>A felmérés kimenete az egyeztetett pontfelhő. Az E57 nyílt pontfelhő-állomány. Önmagában nem BIM-modell, és nem natív Revit- vagy Archicad-fájl.</p>
+          <p><a href="/terepi-felmeres">A terepi felmérés</a></p>
         </article>
         <article class="card">
           <p class="index">03</p>
-          <h3>Scan-to-BIM együttműködés</h3>
-          <p>A Scan-to-BIM modell külön, egyeztetett szolgáltatás, nem része automatikusan minden felmérési megbízásnak. A szoftvert és az elemkört előre rögzítjük.</p>
-          <p><a href="/scan-to-bim">A modellezési együttműködés</a></p>
+          <h3>A modell külön döntés</h3>
+          <p>A modellezés a partner feladata marad, hacsak egy külön Scan-to-BIM csomagban mást nem rögzítünk. IFC-t pontfelhő helyett nem adunk át.</p>
+          <p><a href="/scan-to-bim">A modellezési csomag</a></p>
         </article>
       </div>
-    </div>
-  </section>
-  <section class="section band">
-    <div class="wrap">
-      <h2>Hogyan dolgozunk</h2>
-      <ol class="steps">
-        <li><strong>1. Feladat és kimenet egyeztetése</strong> A briefből látszik a helyszín, a formátum, a koordináta és az, ami nem kell.</li>
-        <li><strong>2. Helyszíni terepi felmérés</strong> A bejárható területen, a megbeszélt ütemben. A zárt vagy veszélyes zóna nem „teljes épület”.</li>
-        <li><strong>3. Feldolgozás és minőség-ellenőrzés</strong> Illesztés, a briefhez kötött ellenőrzés, kizárások. Nem egyetlen, mindenre kimondott szám.</li>
-        <li><strong>4. Adatátadás a megbeszélt formátumban</strong> A mérvadó fájl és az átadási lap. A modell csak akkor, ha külön kért munkacsomag.</li>
-      </ol>
-    </div>
-  </section>
-  <section class="section">
-    <div class="wrap">
-      <h2>Kimenet, amit egyeztetünk</h2>
-      <div class="cards">
-        <article class="card">
-          <h3>E57 vagy más pontfelhő formátum</h3>
-          <p>Az E57 a szokásos nyílt átadás. Más export csak akkor készül, ha a partner szoftvere ezt a briefben kéri, és az egység le van írva.</p>
-          <p><a href="/pontfelho-atadas">Az átadás rendje</a></p>
-        </article>
-        <article class="card">
-          <h3>Ellenőrzött felmérési dokumentáció</h3>
-          <p>Rövid jegyzőkönyv: koordinátarendszer, bejárt terek, illesztés, ismert távolság ha volt, és a kizárások. Nem hatósági záradék.</p>
-          <p><a href="/cikkek/hogyan-ellenorizheto-egy-pontfelho-minosege">Hogyan ellenőrizhető</a></p>
-        </article>
-        <article class="card">
-          <h3>Egyeztetett Scan-to-BIM munkacsomag</h3>
-          <p>Szoftver, elemkör, és ami pontfelhőben marad. A partner sablonjához igazodik, ha azt átadják. Tervezési döntést nem veszünk át.</p>
-          <p><a href="/scan-to-bim">Mikor külön csomag</a></p>
-        </article>
-      </div>
-      ${figure(
-        '/images/hely-atadas.svg',
-        'Helyőrző rajz egy átadási csomaghoz. A keretbe később valós minta vagy projektkép kerül.',
-        'Helyőrző. Ide valós átadási szemelvény vagy projektkép kerül, nem kész eredményként mutatjuk.'
-      )}
     </div>
   </section>
   <section class="section band" id="specifikacio">
     <div class="wrap">
-      <h2>Partneri projektigény</h2>
-      <p class="lede">Írja le a helyszínt és a kért kimenetet. Ha egy mező még nincs eldöntve, válassza az egyeztetést. Azonnali árat így sem adunk.</p>
+      <h2>Projektet egyeztetek</h2>
+      <p class="lede">A név, az e-mail és a rövid leírás elég. A műszaki blokk csak akkor kell, ha a helyszín, a határidő vagy a formátum már ismert.</p>
       ${formHtml}
     </div>
   </section>
@@ -296,38 +257,76 @@ function renderField() {
   ${ctaBand()}`;
 }
 
+function renderHandoffRows() {
+  return HANDOFF_ITEMS.map(
+    ([title, text], index) => `<tr><td>${index + 1}. ${esc(title)}</td><td>${esc(text)}</td></tr>`
+  ).join('');
+}
+
+function renderLevels() {
+  return SERVICE_LEVELS.map(
+    (level) => `<article class="card"><p class="index">${esc(level.id)}</p><h3>${esc(level.title)}</h3><p>${esc(level.text)}</p></article>`
+  ).join('');
+}
+
+function renderInstrumentNote() {
+  const claims = publicInstrumentClaims();
+  if (!claims.length) {
+    return `<p>Számszerű műszerteljesítményt ezen az oldalon nem közlünk. Gyártói maximum csak akkor jelenhet meg, ha a forrás, a tényleges hozzáférés és a tulajdonosi jóváhagyás együtt rögzítve van. Ilyen közzétehető sor jelenleg nincs. Saját műszerparkot nem állítunk.</p>`;
+  }
+  const rows = claims
+    .map(
+      (item) =>
+        `<tr><td>${esc(item.instrument)} ${esc(item.version)}</td><td>${esc(item.manufacturerMaximum)} ${esc(item.unit)}</td><td>${esc(item.conditions)}</td><td><a href="${esc(item.sourceUrl)}">${esc(item.sourceUrl)}</a></td><td>${esc(item.verifiedOn)}</td></tr>`
+    )
+    .join('');
+  return `<div class="table-wrap"><table><thead><tr><th>Műszer</th><th>Gyártói maximum</th><th>Feltétel</th><th>Forrás</th><th>Ellenőrzés</th></tr></thead><tbody>${rows}</tbody></table></div>`;
+}
+
 function renderDelivery() {
   return `
   ${pageHead(
     'Pontfelhő átadás',
-    'Pontfelhő átadás rögzített specifikációval',
-    'A fájl csak akkor használható a partner szoftverében, ha mellé van írva a formátum, az egység, a koordináta és a kizárás.'
+    'Átadási specifikáció',
+    'A felmérés előtt rögzítjük, mit adunk át, mit ad meg a partner, és mi marad az ő modellezési feladata.'
   )}
   <div class="wrap prose">
-    <p>Az átadás nem egy csatolmány név nélkül. A modellezőnek tudnia kell, melyik fájl a mérvadó, milyen egységben van, melyik tengely merre mutat, és hol nincs adat. Ezek nélkül a leggondosabb szkennelés is órákig tartó igazítást okoz Revitben vagy Archicadben.</p>
-    <h2>Mit tartalmaz az átadási lap</h2>
+    <p>A lista egyeztetési rend, nem automatikus alapcsomag. Egy tétel csak akkor része a munkának, ha a specifikációban vállaljuk. Amit a partner nem adott meg, azt nem töltjük ki helyette.</p>
+    <h2>Mit egyeztetünk előre</h2>
     <div class="table-wrap">
       <table>
-        <thead><tr><th>Tétel</th><th>Amit rögzítünk</th></tr></thead>
+        <thead><tr><th>Tétel</th><th>Mit jelent</th></tr></thead>
+        <tbody>${renderHandoffRows()}</tbody>
+      </table>
+    </div>
+    <h2>Ki mit ad</h2>
+    <ul>
+      <li>Mi adjuk át a vállalt terepi adatot, és ha a szint ezt tartalmazza, a regisztrált pontfelhőt a leírt ellenőrzéssel.</li>
+      <li>A partner adja meg a területet, a kritikus részletet, a kért kimenetet és a már ismert koordinátarendszert.</li>
+      <li>A modellezés, a sablon és a tervezési döntés a partner feladata marad.</li>
+      <li>A képi dokumentáció, a külön bontás és a modellezési csomag opcionális, külön egyeztetéssel.</li>
+    </ul>
+    <h2>Formátumok</h2>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Csoport</th><th>Példa</th><th>Hogyan kezeljük</th></tr></thead>
         <tbody>
-          <tr><td>Formátum</td><td>Jellemzően E57. Más export csak a briefben megnevezett szoftverhez, egy mérvadó fájllal.</td></tr>
-          <tr><td>Egység</td><td>Méter vagy milliméter, leírva. A kettőt nem keverjük egy átadásban.</td></tr>
-          <tr><td>Koordináta</td><td>A partner helyi rendszere, EOV vagy relatív helyszíni rendszer, a tengelyek irányával.</td></tr>
-          <tr><td>Illesztés</td><td>Az álláspontok kapcsolata és a vizsgált maradék. Egy átlag nem fedi el a széthúzó zónát.</td></tr>
-          <tr><td>Lefedettség</td><td>A bejárt terek, és külön a kizárás. A lyuk nem lesz utólag „mért” felület.</td></tr>
-          <tr><td>Modell</td><td>Nem része az átadásnak, kivéve ha Scan-to-BIM munkacsomag is készült.</td></tr>
+          <tr><td>Pontfelhő</td><td>E57</td><td>Nyílt pontfelhő-állomány. Az E57 átadása nem BIM-modell és nem natív tervfájl.</td></tr>
+          <tr><td>Szoftverhez előkészített állomány</td><td>RCP</td><td>Nem támogatott átadásként közöljük, amíg az export munkafolyamata nincs ellenőrizve.</td></tr>
+          <tr><td>BIM-csereformátum</td><td>IFC</td><td>Modellcsere, nem pontfelhő. Csak külön modellezési csomagban értelmezhető, és nem helyettesíti az E57-et.</td></tr>
+          <tr><td>Natív modellállomány</td><td>Revit, Archicad</td><td>Nem a felmérés kimenete. Natív fájlt nem ígérünk pontfelhő-átadás helyett.</td></tr>
         </tbody>
       </table>
     </div>
-    <h2>E57 és a partner saját eszköze</h2>
-    <p>Az E57 azért az alap, mert nyílt, és a legtöbb pontfelhő- valamint szerzői szoftver be tudja olvasni. Ha a csapat ReCapben vagy más Autodesk-eszközben dolgozik, az ehhez kért exportot a specifikációban néven nevezzük. A második fájl nem írhatja felül az elsőt észrevétlenül: megmondjuk, melyik a mérvadó.</p>
-    <p>Strukturált állomány és egységesített felhő más-más további munkát jelent. Ha a modellezőnek álláspontonként kell a felhő, ezt előre jelezni kell. Egy utólag kért, más szerkezetű export új munka, nem a meglévő átadás hallgatólagos része.</p>
-    <h2>Fájlméret és átadás</h2>
-    <p>Egy több szintet és homlokzatot tartalmazó felhő könnyen túllép azon, amit e-mailben értelmes elküldeni. Az űrlap ezért nagyságrendet kér. A csatornát – lemez, a partner saját tárhelye vagy más, előre megnevezett mód – az ajánlatban rögzítjük. Jelszót és hozzáférést nem kérünk az űrlapon, és fájlt sem töltünk fel ezen az oldalon.</p>
-    <h2>Amit a modellező az átvételkor ellenőriz</h2>
-    <p>Érdemes megnyitni a fájlt a saját szoftverben, ellenőrizni az egységet és a tengelyt, majd egy metszeten megnézni az ismert szintet. Ha volt kontrollméret, azt a jegyzőkönyv számmal írja. Az eltérést jelezni lehet, a felhőt nem „szépítjük” egy kívánt modellhez. A részletes szempontok a <a href="/cikkek/hogyan-ellenorizheto-egy-pontfelho-minosege">pontfelhő minőségéről szóló cikkben</a> vannak.</p>
+    <p>Jóváhagyásra vár, ezért nem szerepel támogatott formátumként: ${esc(PENDING_APPROVAL.join('; '))}.</p>
+    <h2>Egyeztethető szintek</h2>
+    <p>Árat nem írunk ki. A három szint a munka terjedelmét választja el. Egyik sem jelent kedvezményt, lekötött kapacitást vagy szerződésen kívüli titoktartási ígéretet. Az együttműködés feltételeit a konkrét feladatnál egyeztetjük.</p>
+    <div class="cards">${renderLevels()}</div>
+    <h2>Műszeradat</h2>
+    ${renderInstrumentNote()}
+    <p>A pontosság, a pontköz, a távolságmérési zaj és a regisztrációs maradékhiba külön fogalom. Az illesztés maradéka önmagában nem a teljes projekt abszolút pontossága.</p>
     <div class="note">
-      <p>Az átadás nem jogilag hitelesített földmérési munkarész, és nem hatósági dokumentum. A tűrést a konkrét feladathoz írjuk, nem egy minden épületre érvényes mondattal.</p>
+      <p>Az átadás nem földhivatali munkarész és nem hatósági dokumentum. Publikálható mintaállomány nincs, letöltőgombot ezért nem teszünk ki. Pontfelhőt ezen az oldalon nem lehet feltölteni.</p>
     </div>
   </div>
   ${ctaBand()}`;
@@ -343,7 +342,7 @@ function renderScan() {
   <div class="wrap prose">
     <p>A Scan-to-BIM modell külön, egyeztetett szolgáltatás, nem része automatikusan minden felmérési megbízásnak. Sok partnerünk éppen azért keres minket, hogy a terepi munkát levegyük a modellezőiről, a modellt viszont a saját sablonjában tartsa. Ezt támogatjuk. A modellezést csak külön kérésre vesszük a munkába.</p>
     <h2>Ki modellez</h2>
-    <p>Ha a partner modellez, az átadásunk a pontfelhő és a jegyzőkönyv. Ha mi modellezünk, megnevezzük a szoftvert: Revit, Archicad vagy IFC-központú átadás. A partner sablonját, családjait és névkonvencióját csak akkor használjuk, ha átadják. Új osztályozást nem vezetünk be a munka közepén.</p>
+    <p>Ha a partner modellez, az átadásunk a pontfelhő és a jegyzőkönyv. Natív Revit- vagy Archicad-fájlt a felmérés nem ígér. Ilyen állomány csak akkor lehet szóba, ha a modellezési csomag ezt külön rögzíti, és a munkafolyamat jóváhagyott. Az IFC ebben az esetben csereformátum, nem a pontfelhő helye. A partner sablonját csak akkor használjuk, ha átadják.</p>
     <p>Vegyes felállás is lehet. Az építészet a partnernél marad, egy gépház pedig nálunk készül, mert arra kértek csomagot. A határ a zóna és az elemtípus, nem egy laza „a gépészet is legyen benne” mondat.</p>
     <h2>Amit a munkacsomag rögzít</h2>
     <ul>
@@ -382,7 +381,7 @@ function renderPartner() {
       <li>a kizárások és a felhasználás: ütközés, felújítás, dokumentálás</li>
       <li>ismétlődő munkánál ugyanaz az átadási lap, nem minden épületnél új szokás</li>
     </ul>
-    <p>Az első közös munkánál a <a href="/minta-anyagok">minta-anyag</a> segít, hogy a formátum a partner gépén megnyíljon, mielőtt egy nagy állomány elkészül. A további helyszínek erre a mintára és a briefre épülnek. Keretszerződést az oldal nem köt. Minden megbízás írásos ajánlat és külön megállapodás.</p>
+    <p>Az első közös munkánál az <a href="/pontfelho-atadas">átadási specifikáció</a> mondja meg, melyik formátum a mérvadó. Publikálható mintaállományt nem töltünk fel. Keretszerződést az oldal nem köt. Minden megbízás írásos ajánlat és külön megállapodás.</p>
     <h2>Amit mi tartunk stabilan</h2>
     <p>A terepi munkát a leírt lefedettségre szervezzük, az illesztést és a kizárásokat dokumentáljuk, és a mérvadó fájlt nevesítjük. Ha a helyszín szűkebb, azt még az átadás előtt jelezzük, nem egy csendes lyukkal. A Scan-to-BIM-et nem csúsztatjuk bele a felmérésbe. Ha kell, külön csomagként, látható határral kerül az ajánlatba.</p>
   </div>
@@ -393,28 +392,26 @@ function renderSamples() {
   return `
   ${pageHead(
     'Minta anyagok',
-    'Minta-anyag a saját szoftveréhez, mielőtt az egész épület elkészül',
-    'Rövid szemelvény és formátumjegyzet. Nem teljes felmérés, nem referencia-lista, és nem ár.'
+    'Formátumjegyzet, letölthető minta nélkül',
+    'Az oldal elmagyarázza a formátumok különbségét. Publikálható mintaállomány és letöltés nincs.'
   )}
   <div class="wrap prose">
     ${figure(
       '/images/hely-minta.svg',
-      'Helyőrző rajz egy minta-anyag formátumjegyzetéhez. A keretbe később valós szemelvény kerül.',
-      'Helyőrző a minta-anyag képének. Konkrét projekt eredményét nem helyettesíti.'
+      'Helyőrző rajz egy átadási formátumjegyzethez. A keretbe később valós, publikálható szemelvény kerülhet.',
+      'Helyőrző. Nem letölthető minta és nem kész projekt eredménye.'
     )}
-    <p>A minta arra való, hogy a modellező a saját gépén lássa: az E57 vagy a kért export megnyílik, az egység stimmel, a tengely a jegyzet szerint áll. Egy idegen nézőprogramban készült látványkép ezt nem bizonyítja. Ezért a mintát a partner szoftveréhez kérjük, nem egy általános galériához.</p>
-    <h2>Mi van egy mintában</h2>
+    <p>Publikálható pontfelhő-mintát jelenleg nem adunk ki, és az oldalon nincs letöltés. A formátumot az <a href="/pontfelho-atadas">átadási specifikáció</a> választja el: az E57 pontfelhő, az IFC modellcsere, a natív tervfájl pedig egyik sem.</p>
+    <h2>Amit egy átadásnál leírunk</h2>
     <ul>
-      <li>rövid pontfelhő-szemelvény, nem egy teljes épület állománya</li>
-      <li>a formátum, az egység és a koordináta leírása</li>
-      <li>egy példa arra, hogyan néz ki a kizárás jelölése az átadási lapon</li>
-      <li>ha a Scan-to-BIM is kérdés, egy mondat arról, mi maradt csak felhő</li>
+      <li>a mérvadó pontfelhő formátuma, jellemzően E57</li>
+      <li>az egység és a koordinátarendszer</li>
+      <li>a kizárás, ha egy rész nem volt bejárható</li>
+      <li>az, hogy a modell nem része a felmérésnek</li>
     </ul>
-    <p>A mintához nem tartozik ügyfélnév, és nem állítjuk, hogy egy korábbi munka minden részlete nyilvános. A képek az oldalon addig helyőrzők, amíg ide saját, publikálható szemelvény nem kerül. A keret aláírása ezt jelzi, hogy ne lehessen kész projektfotónak nézni.</p>
-    <h2>Amit a minta nem válaszol meg</h2>
-    <p>A minta nem mond árat, nem ígér határidőt egy konkrét címre, és nem helyettesíti a briefet. Két épület ugyanabban a formátumban is más munka, ha az egyik üres iroda, a másik pedig üzemelő csarnok. A minta után a <a href="/kapcsolat?igeny=minta#igeny">projektigényt</a> a helyszínnel és a kimenettel együtt érdemes elküldeni. Az űrlap a minta kérésére előre kitölti a projekt típusát, a többi mező a partneré.</p>
-    <h2>Formátumok, amelyekről beszélünk</h2>
-    <p>Az alap az E57. Revit-munkafolyamathoz egyeztetett Autodesk-export is kérhető. Archicadben a felhő jellemzően a pontfelhő-kezelőn keresztül érkezik, nem natív modellként. IFC-t mintafelhő helyett nem küldünk: az IFC modellcsere, és csak akkor értelmes, ha modellezési csomag is van. A részletes szétválasztás a <a href="/cikkek/pontfelho-ifc-es-revit">pontfelhő, IFC és Revit cikkben</a> van.</p>
+    <p>A képek helyőrzők. Amíg saját, publikálható szemelvény nincs, nem teszünk ki olyan gombot, amelyik fájlt ígérne.</p>
+    <h2>Ha a formátumot egyeztetné</h2>
+    <p>A <a href="/kapcsolat#projektigeny">projektbrief</a> a névvel, az e-maillel és a rövid leírással elküldhető. A kért kimenet opcionális. Az űrlap állományt nem fogad.</p>
   </div>
   ${ctaBand()}`;
 }
@@ -505,7 +502,7 @@ function renderContact({ formHtml, config }) {
   ${pageHead(
     'Kapcsolat',
     'Projektigény és kapcsolat',
-    'A specifikációt az űrlapon küldje. Ha minta kell a saját szoftveréhez, az űrlap a minta kérésére áll be.'
+    'Az első megkereséshez a név, az e-mail és a projekt rövid leírása elég.'
   )}
   <div class="wrap contact-grid">
     <div class="prose">
@@ -517,7 +514,7 @@ function renderContact({ formHtml, config }) {
       <p>A Scan-to-BIM modell külön, egyeztetett szolgáltatás, nem része automatikusan minden felmérési megbízásnak. Ha modellezés is szóba jön, az űrlap projekt típusánál ezt válassza.</p>
     </div>
     <div id="projektigeny">
-      <h2 id="igeny">Felmérési specifikáció</h2>
+      <h2 id="igeny">Projektet egyeztetek</h2>
       ${formHtml}
     </div>
   </div>`;
@@ -542,7 +539,7 @@ function renderPrivacy(config) {
     <p>${esc(config.companyLegalName)}<br>${esc(config.companySeat)}<br>Cégjegyzékszám: ${esc(config.companyRegNumber)}<br>Adószám: ${esc(config.companyTaxId)}<br>E-mail: <a href="mailto:${esc(config.contactEmail)}">${esc(config.contactEmail)}</a><br>Telefon: <a href="tel:${esc(String(config.contactPhone).replace(/[^\d+]/g, ''))}">${esc(config.contactPhone)}</a>, hétfőtől péntekig, 8:00 és 19:00 között.</p>
     <p>Az üzemeltető azonosító adatai az <a href="/aszf">ÁSZF</a> Üzemeltető adatai részében is szerepelnek.</p>
     <h2>Milyen adatot rögzítünk</h2>
-    <p>Az űrlap és a technikai környezet az alábbiakat menti: beküldés időpontja, forrásdomain, forrás URL, kampány és UTM paraméterek, partner neve, kapcsolattartó, e-mail, telefon, cég, projekt típusa, épület típusa, helyszín, tervezett ütemezés, kért kimenet, szoftver, koordinátarendszer, pontossági igény, fájlméret, megjegyzés, a hozzájárulás ténye, valamint a megkeresés státusza. Fájlt az űrlap nem fogad. Az IP-címet az adatbázisba nem írjuk. A napló a kérés idejét, a HTTP-módszert, az útvonalat és az állapotkódot tartalmazza, a mezők szövegét nem.</p>
+    <p>Az űrlap a nevet, az e-mail címet és a projekt rövid leírását kéri. Ha a partner megadja, mentjük az irodát, a telefont, a helyszínt, a határidőt, a kért kimenetet, a szoftvert, a koordinátarendszert, a pontossági igényt és a specifikáció hivatkozását. A korábbi fájlméret mező a tárolásban megmarad, az új űrlap nem kéri, és fájlt nem fogad. Mellé kerül a beküldés ideje, a forrás, a kampányadatok, a hozzájárulás és a státusz. Az IP-címet az adatbázisba nem írjuk.</p>
     <h2>Cél és jogalap</h2>
     <p>Az adatokat a projektigény megválaszolásához, az ajánlat előkészítéséhez és a kapcsolattartáshoz használjuk. A jogalap a hozzájárulás (GDPR 6. cikk (1) a) pont), valamint a megkeresésre adott válaszhoz szükséges, szerződéskötést megelőző lépés (6. cikk (1) b) pont). Hírlevelet, profilalkotást és automatizált döntést nem végzünk. Az adatokat nem adjuk el.</p>
     <h2>Megőrzés</h2>

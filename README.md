@@ -122,7 +122,7 @@ www.3dscantobim.hu {
 
 A projektigények sqlite fájlban vannak. Alaphelyzetben: `data/leads.sqlite`. Másik fájl a `DATA_FILE`, vagy `DATABASE_URL=sqlite:./data/leads.sqlite`. Postgres és más közös adatbázis nem támogatott: az alkalmazás ilyen címmel nem indul.
 
-A rögzített mezők: beküldés időpontja, forrásdomain, forrás URL, kampány és UTM, partner neve, kapcsolattartó, e-mail, telefon, cég, projekt típusa, épület típusa, helyszín, tervezett ütemezés, kért kimenet, szoftver, koordinátarendszer, pontossági igény, fájlméret, megjegyzés, státusz. A hozzájárulás és a levelezés állapota is megmarad.
+A kötelező mezők: név, e-mail, a projekt rövid leírása és a hozzájárulás. A műszaki mezők üresen is menthetők. A tárolt oszlopok változatlanul megmaradnak, köztük a korábbi fájlméret; ehhez jött a specifikáció hivatkozása. Fájlfeltöltés nincs.
 
 Mentés leállított folyamattal:
 

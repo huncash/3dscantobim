@@ -240,6 +240,9 @@ p { margin: 0 0 0.85em; }
 
 .contact-grid { display: grid; grid-template-columns: 0.8fr 1.2fr; gap: 28px; align-items: start; padding-bottom: 36px; }
 .lead-form { background: var(--sheet); border: 1px solid var(--line); padding: 16px; }
+.optional-tech { border: 1px solid var(--line); margin: 0 0 14px; padding: 8px 12px 14px; }
+.optional-tech summary { cursor: pointer; font-weight: 650; margin: 4px 0 10px; }
+.prose .cards { margin: 16px 0 22px; }
 fieldset { border: 1px solid var(--line); margin: 0 0 14px; padding: 8px 12px 14px; }
 legend { padding: 0 6px; font-weight: 650; color: var(--ink); }
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }

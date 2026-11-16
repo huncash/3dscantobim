@@ -24,6 +24,7 @@ const FIELDS = [
   ['coordinate_system', 'Koordinátarendszer'],
   ['accuracy', 'Pontossági igény'],
   ['file_size', 'Fájlméret'],
+  ['spec_reference', 'Specifikáció hivatkozása'],
   ['comment', 'Megjegyzés'],
   ['status', 'Státusz'],
   ['consent', 'GDPR hozzájárulás'],

@@ -23,7 +23,7 @@ const ARTICLES = [
       <p>Ugyanígy megállunk, ha a kimenet a helyszínen változik meg: ha a pontfelhő helyett hirtelen teljes modellt kérnek, az új scope, nem a meglévő felmérés hallgatólagos bővítése.</p>
       <h2>Hogyan illeszkedik a saját sablonjához</h2>
       <p>A jó átadás úgy érkezik, hogy a modellező a saját szoftverében meg tudja nyitni, a tengelyek stimmelnek a kapott leírással, és a jegyzőkönyvből látja, hol szabad modell elemet rátenni és hol nem. Ehhez a felmérési brief a modellező nyelvén készül: szintnevek, rácsok, ha vannak, formátum, egység, kizárás. A terepi munka ezekhez igazodik, nem fordítva.</p>
-      <p>Ha bizonytalan, milyen átadás fér bele a saját környezetébe, előbb <a href="/minta-anyagok">minta-anyagot</a> érdemes kérni, és csak utána rögzíteni a projekt specifikációját. A minta nem helyettesíti a briefet, de megmutatja a formátumot, mielőtt egy egész épület állománya elkészül.</p>
+      <p>Ha bizonytalan, milyen átadás fér bele a saját környezetébe, az <a href="/pontfelho-atadas">átadási specifikáció</a> választja el a pontfelhőt, a csereformátumot és a natív modellt. Publikálható mintaállományt az oldal nem ad.</p>
     `,
   },
   {
@@ -122,7 +122,7 @@ const ARTICLES = [
       <p>Ez különösen igaz generáltervezőknél és nagyobb kivitelezőknél, ahol több helyszín fut párhuzamosan, a modellezési szabvány viszont egy kézben van. A felmérésnek ehhez a szabványhoz kell igazodnia, nem egy újabb, idegen modellcsomagot kell behoznia a projektbe.</p>
       <h2>Amikor a saját műszer nem elég kapacitás</h2>
       <p>Egy iroda rendelkezhet szkennerrel, és mégis kiszervezhet egy időszakot: betegség, párhuzamos vidékhelyszínek, vagy egy ipari tér, ahol a helyszíni idő a vártnál hosszabb. A kiszervezés feltétele ilyenkor is a rögzített átadás. Ha a saját csapat E57-et és egy adott helyi koordinátát használ, a külső felmérés ugyanezt adja, nem egy másik szokást.</p>
-      <p>Ismétlődő partneri ritmusnál érdemes az első munkánál mintát nézni, és a további helyszíneken ugyanazt az átadási lapot használni. A második és a harmadik épület így nem új találkozó a formátumról, hanem ugyanannak a specifikációnak a következő helyszíne.</p>
+      <p>Ismétlődő partneri ritmusnál az első munkánál rögzítjük az átadási lapot, és a további helyszíneken ugyanezt használjuk. A második és a harmadik épület így nem új találkozó a formátumról, hanem ugyanannak a specifikációnak a következő helyszíne.</p>
       <h2>Amikor nem ezt a megbízást keresi</h2>
       <p>Nem ezt a szolgáltatást keresi, aki földhivatali térképet, kitűzést vagy hatósági záradékolt felmérést szeretne. Azt nem vállaljuk. Nem ezt keresi az sem, akinek még nincs fogadó modellezője, nincs döntés a kimenetről, és egy kész, beadható modellt szeretne határidőre, brief nélkül. Ilyenkor előbb a feladatot kell tisztázni, árat nem adunk a homályra.</p>
       <p>Önálló lakossági „mérjék fel a lakást, mert felújítunk” kérés sem a fő közönségünk. Dolgozunk meglévő épületen, de a megbízó oldalán olyan partnerrel, aki a modellezési munkafolyamatot viszi: BIM-csapat, tervezőiroda, generáltervező, nagyobb kivitelező.</p>
@@ -130,7 +130,7 @@ const ARTICLES = [
       <p>Az egyszeri, sürgős kiszállás is vállalható, ha a specifikáció röviden, de egyértelműen megvan. A kiszámíthatóbb munka mégis a partneri ritmus: ismert átadási lap, ismert szoftver, ismert kizárási lista, és egy kapcsolattartó, aki a helyszíni hozzáférést intézi. Ezt nem keretszerződésként kötjük az oldalon. Az oldal csak a projektigényt fogadja, a megállapodás külön, írásban születik.</p>
       <p>A fizetést, az ütemezést és a második kiszállás szabályát az ajánlat tartalmazza. Automatikus szerződés és online fizetés nincs, mert a helyszín és a kimenet nélkül ezek a tételek nem ellenőrizhetők.</p>
       <h2>Mit tartson meg a partner</h2>
-      <p>A partnernél marad a modellezési szabvány, a sablon, a megrendelővel való tervezési kapcsolat és a döntés, hogy egy adott pontfelhőből mit emel modellbe. Nálunk a terepi munka, az illesztés, a minőség-ellenőrzés a briefhez képest, és az átadás a megbeszélt formátumban. Ha a modell egy részét is kérik, az a <a href="/scan-to-bim">Scan-to-BIM együttműködés</a> lapján leírt külön csomag.</p>
+      <p>A partnernél marad a modellezési szabvány, a sablon, a megrendelővel való tervezési kapcsolat és a döntés, hogy egy adott pontfelhőből mit emel modellbe. Nálunk a terepi munka és az a regisztráció, ellenőrzés és átadás, amit a specifikáció vállal. Ha a modell egy részét is kérik, az a <a href="/scan-to-bim">Scan-to-BIM együttműködés</a> lapján leírt külön csomag.</p>
       <p>Ez a vágás attól tiszta, hogy mindkét fél látja a határt. A modellező nem kap idegen modellt, amit utólag a saját szabványára kell fordítania. A terepi csapat nem vállal olyat, ami a helyszínen nem volt mérhető.</p>
     `,
   },

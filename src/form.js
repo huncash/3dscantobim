@@ -6,7 +6,6 @@ const {
   SOFTWARE,
   COORDINATE_SYSTEMS,
   ACCURACY,
-  FILE_SIZES,
   UTM_KEYS,
 } = require('./leads');
 
@@ -65,50 +64,42 @@ function renderLeadForm({ values = {}, errors = null } = {}) {
       <input id="s7_hp" name="s7_hp" type="text" tabindex="-1" autocomplete="off" value="">
     </div>
     <fieldset>
-      <legend>Partner</legend>
+      <legend>Kapcsolat</legend>
       <div class="form-grid">
-        ${textField({ name: 'partner_name', label: 'Partner neve', value: values.partner_name, errors, required: true, max: 120, autocomplete: 'organization' })}
-        ${textField({ name: 'contact_name', label: 'Kapcsolattartó', value: values.contact_name, errors, required: true, max: 120, autocomplete: 'name' })}
+        ${textField({ name: 'contact_name', label: 'Név', value: values.contact_name, errors, required: true, max: 120, autocomplete: 'name' })}
         ${textField({ name: 'email', label: 'E-mail', value: values.email, errors, type: 'email', required: true, max: 160, autocomplete: 'email' })}
-        ${textField({ name: 'phone', label: 'Telefon', value: values.phone, errors, type: 'tel', required: true, max: 40, autocomplete: 'tel' })}
-        ${textField({
-          name: 'company',
-          label: 'Cég',
-          value: values.company,
-          errors,
-          required: true,
-          max: 160,
-          span: true,
-          autocomplete: 'organization',
-          hint: 'Ha nincs külön cégnév, írja be a partner nevét.',
-        })}
-      </div>
-    </fieldset>
-    <fieldset>
-      <legend>A feladat</legend>
-      <div class="form-grid">
-        ${selectField({ name: 'project_type', label: 'Projekt típusa', options: PROJECT_TYPES, value: values.project_type, errors })}
-        ${selectField({ name: 'building_type', label: 'Épület vagy ipari tér típusa', options: BUILDING_TYPES, value: values.building_type, errors })}
-        ${textField({ name: 'location', label: 'Helyszín', value: values.location, errors, required: true, max: 160, span: true, hint: 'Település és a helyszín jellege elég. A pontos címet egyeztetéskor rögzítjük.' })}
-        ${textField({ name: 'schedule', label: 'Tervezett ütemezés', value: values.schedule, errors, required: true, max: 160, span: true, hint: 'Ha még nincs dátum, írja: egyeztetendő.' })}
-      </div>
-    </fieldset>
-    <fieldset>
-      <legend>Az átadás</legend>
-      <div class="form-grid">
-        ${selectField({ name: 'output_request', label: 'Kért kimenet', options: OUTPUTS, value: values.output_request, errors, span: true })}
-        ${selectField({ name: 'software', label: 'Szoftver / formátum', options: SOFTWARE, value: values.software, errors })}
-        ${selectField({ name: 'coordinate_system', label: 'Koordinátarendszer', options: COORDINATE_SYSTEMS, value: values.coordinate_system, errors })}
-        ${selectField({ name: 'accuracy', label: 'Pontossági igény', options: ACCURACY, value: values.accuracy, errors, span: true })}
-        ${selectField({ name: 'file_size', label: 'Becsült fájlméret', options: FILE_SIZES, value: values.file_size, errors, span: true })}
         <div class="field span-2">
-          <label for="comment">Megjegyzés</label>
-          <textarea id="comment" name="comment" maxlength="4000" rows="5">${esc(values.comment || '')}</textarea>
-          <p class="hint">Ide kerülhet a szintszám, a bejárható területek, a kizárások és az, ami a modellezési munkafolyamat szempontjából számít. Fájlt az űrlap nem fogad.</p>
+          <label for="comment">Projekt rövid leírása <span class="req">kötelező</span></label>
+          <textarea id="comment" name="comment" maxlength="4000" rows="4" required${errors && errors.comment ? ' aria-invalid="true" aria-describedby="comment-error"' : ''}>${esc(values.comment || '')}</textarea>
+          <p class="hint">Néhány mondat a helyszín jellegéről és arról, mire kell az adat. Fájlt az űrlap nem fogad.</p>
           ${fieldError(errors, 'comment')}
         </div>
       </div>
     </fieldset>
+    <details class="optional-tech">
+      <summary>Műszaki adatok, ha már ismertek</summary>
+      <div class="form-grid">
+        ${textField({ name: 'partner_name', label: 'Iroda vagy cég', value: values.partner_name, errors, max: 120, autocomplete: 'organization' })}
+        ${textField({ name: 'phone', label: 'Telefon', value: values.phone, errors, type: 'tel', max: 40, autocomplete: 'tel' })}
+        ${textField({ name: 'location', label: 'Helyszín és méret', value: values.location, errors, max: 160, span: true })}
+        ${textField({ name: 'schedule', label: 'Határidő', value: values.schedule, errors, max: 160, span: true })}
+        ${selectField({ name: 'output_request', label: 'Kért kimenet', options: OUTPUTS, value: values.output_request, errors, required: false, span: true })}
+        ${selectField({ name: 'software', label: 'Szoftver vagy formátum', options: SOFTWARE, value: values.software, errors, required: false })}
+        ${selectField({ name: 'coordinate_system', label: 'Koordinátarendszer, ha ismert', options: COORDINATE_SYSTEMS, value: values.coordinate_system, errors, required: false })}
+        ${selectField({ name: 'accuracy', label: 'Kritikus pontossági igény', options: ACCURACY, value: values.accuracy, errors, required: false, span: true })}
+        ${selectField({ name: 'project_type', label: 'Projekt jellege', options: PROJECT_TYPES, value: values.project_type, errors, required: false })}
+        ${selectField({ name: 'building_type', label: 'Épület vagy tér típusa', options: BUILDING_TYPES, value: values.building_type, errors, required: false })}
+        ${textField({
+          name: 'spec_reference',
+          label: 'Meglévő specifikáció hivatkozása',
+          value: values.spec_reference,
+          errors,
+          max: 300,
+          span: true,
+          hint: 'Link vagy rövid azonosító. Állományt itt nem lehet feltölteni.',
+        })}
+      </div>
+    </details>
     <div class="field consent">
       <label for="consent">
         <input id="consent" name="consent" type="checkbox" value="igen"${values.consent ? ' checked' : ''} required${errors && errors.consent ? ' aria-invalid="true" aria-describedby="consent-error"' : ''}>
@@ -117,8 +108,8 @@ function renderLeadForm({ values = {}, errors = null } = {}) {
       ${fieldError(errors, 'consent')}
     </div>
     <div class="form-actions">
-      <button class="btn" type="submit">Projektigény elküldése</button>
-      <p>Az elküldés még nem ajánlat és nem szerződés. Ha a pontos árhoz kevés az adat, előbb visszakérdezünk.</p>
+      <button class="btn" type="submit">Projektet egyeztetek</button>
+      <p>Az elküldés még nem ajánlat és nem szerződés. A műszaki mezők nélkül is elküldhető. Ha az árhoz kevés az adat, előbb visszakérdezünk.</p>
     </div>
   </form>`;
 }
@@ -127,12 +118,12 @@ function ctaBand() {
   return `<aside class="cta-band">
     <div class="wrap cta-inner">
       <div>
-        <h2>Küldje el a felmérési specifikációt</h2>
-        <p>A projektigényből nem készül azonnali ár. Ha a helyszín, a kimenet vagy a hozzáférés még hiányzik, előbb azt tisztázzuk.</p>
+        <h2>Projektet egyeztetek</h2>
+        <p>Az első megkereséshez a név, az e-mail és a projekt rövid leírása elég. Ár és szerződés ebből még nem készül.</p>
       </div>
       <div class="actions">
-        <a class="btn" href="/kapcsolat#igeny">Küldje el a felmérési specifikációt</a>
-        <a class="btn btn-ghost" href="/kapcsolat?igeny=minta#igeny">Kérjen minta-anyagot</a>
+        <a class="btn" href="/kapcsolat#projektigeny">Projektet egyeztetek</a>
+        <a class="btn btn-ghost" href="/pontfelho-atadas">Átadási specifikáció</a>
       </div>
     </div>
   </aside>`;

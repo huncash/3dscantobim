@@ -130,34 +130,35 @@ function validateLead(body, { fallbackHost, referer }) {
   const accuracy = cleanLine(body.accuracy);
   const fileSize = cleanLine(body.file_size);
   const comment = cleanText(body.comment);
+  const specReference = cleanLine(body.spec_reference);
   const consent = body.consent === 'igen';
   const honeypot = cleanLine(body.s7_hp);
 
-  if (partnerName.length < 2) errors.partner_name = 'Adja meg a partner nevét.';
   requireMax(errors, 'partner_name', partnerName, 120, 'partner neve');
-  if (contactName.length < 2) errors.contact_name = 'Adja meg a kapcsolattartó nevét.';
-  requireMax(errors, 'contact_name', contactName, 120, 'kapcsolattartó');
+  if (contactName.length < 2) errors.contact_name = 'Adja meg a nevét.';
+  requireMax(errors, 'contact_name', contactName, 120, 'név');
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 160) {
     errors.email = 'Adjon meg egy használható e-mail címet.';
   }
-  const digits = phone.replace(/\D/g, '');
-  if (!/^[0-9+()/\-\s]+$/.test(phone) || digits.length < 6 || digits.length > 15) {
-    errors.phone = 'Adjon meg egy visszahívható telefonszámot.';
+  if (phone) {
+    const digits = phone.replace(/\D/g, '');
+    if (!/^[0-9+()/\-\s]+$/.test(phone) || digits.length < 6 || digits.length > 15) {
+      errors.phone = 'A telefonszám nem használható. Ha még nincs, hagyja üresen.';
+    }
   }
-  if (company.length < 2) errors.company = 'Adja meg a céget. Ha nincs külön cégnév, írja be a partner nevét.';
   requireMax(errors, 'company', company, 160, 'cég');
-  requireChoice(errors, 'project_type', projectType, PROJECT_TYPES, 'a projekt típusát');
-  requireChoice(errors, 'building_type', buildingType, BUILDING_TYPES, 'az épület vagy ipari tér típusát');
-  if (location.length < 2) errors.location = 'Adja meg a helyszínt.';
+  if (projectType) requireChoice(errors, 'project_type', projectType, PROJECT_TYPES, 'a projekt típusát');
+  if (buildingType) requireChoice(errors, 'building_type', buildingType, BUILDING_TYPES, 'az épület vagy ipari tér típusát');
   requireMax(errors, 'location', location, 160, 'helyszín');
-  if (schedule.length < 2) errors.schedule = 'Adja meg a tervezett ütemezést. Ha még nincs dátum, írja: egyeztetendő.';
-  requireMax(errors, 'schedule', schedule, 160, 'ütemezés');
-  requireChoice(errors, 'output_request', outputRequest, OUTPUTS, 'a kért kimenetet');
-  requireChoice(errors, 'software', software, SOFTWARE, 'a szoftvert vagy a formátumot');
-  requireChoice(errors, 'coordinate_system', coordinateSystem, COORDINATE_SYSTEMS, 'a koordinátarendszert');
-  requireChoice(errors, 'accuracy', accuracy, ACCURACY, 'a pontossági igényt');
-  requireChoice(errors, 'file_size', fileSize, FILE_SIZES, 'a becsült fájlméretet');
-  requireMax(errors, 'comment', comment, 4000, 'megjegyzés');
+  requireMax(errors, 'schedule', schedule, 160, 'határidő');
+  if (outputRequest) requireChoice(errors, 'output_request', outputRequest, OUTPUTS, 'a kért kimenetet');
+  if (software) requireChoice(errors, 'software', software, SOFTWARE, 'a szoftvert vagy a formátumot');
+  if (coordinateSystem) requireChoice(errors, 'coordinate_system', coordinateSystem, COORDINATE_SYSTEMS, 'a koordinátarendszert');
+  if (accuracy) requireChoice(errors, 'accuracy', accuracy, ACCURACY, 'a pontossági igényt');
+  if (fileSize) requireChoice(errors, 'file_size', fileSize, FILE_SIZES, 'a fájlméretet');
+  if (comment.length < 8) errors.comment = 'Írja le röviden a projektet.';
+  requireMax(errors, 'comment', comment, 4000, 'projekt leírása');
+  requireMax(errors, 'spec_reference', specReference, 300, 'specifikáció hivatkozása');
   if (!consent) errors.consent = 'A projektigény rögzítéséhez el kell fogadnia az adatkezelési tájékoztatót.';
 
   const refererUrl = cleanUrl(referer);
@@ -184,7 +185,6 @@ function validateLead(body, { fallbackHost, referer }) {
     errors,
     spam: Boolean(honeypot),
     values: {
-      partner_name: partnerName,
       contact_name: contactName,
       email,
       phone,
@@ -197,7 +197,9 @@ function validateLead(body, { fallbackHost, referer }) {
       software,
       coordinate_system: coordinateSystem,
       accuracy,
+      partner_name: partnerName || contactName,
       file_size: fileSize,
+      spec_reference: specReference,
       comment,
       consent,
       source_domain: sourceDomain,
@@ -238,6 +240,7 @@ const CSV_COLUMNS = [
   ['coordinate_system', 'Koordinátarendszer'],
   ['accuracy', 'Pontossági igény'],
   ['file_size', 'Fájlméret'],
+  ['spec_reference', 'Specifikáció hivatkozása'],
   ['comment', 'Megjegyzés'],
   ['status', 'Státusz'],
   ['consent', 'GDPR hozzájárulás'],

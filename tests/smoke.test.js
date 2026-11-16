@@ -84,19 +84,16 @@ test('a konfiguráció a 7000-es porton és a saját adatfájlon áll', () => {
   assert.match(compose, /127\.0\.0\.1:7000:7000/);
 });
 
-test('a főoldal a kért üzenetet és a három szolgáltatást mutatja', async () => {
+test('a főoldal a kért üzenetet és a három kiemelést mutatja', async () => {
   const { response, body } = await text('/');
   assert.equal(response.status, 200);
-  assert.match(body, /<h1>Terepi felmérés és pontfelhő a saját modellezési munkafolyamatához<\/h1>/);
-  assert.match(body, /BIM-modellező csapatoknak és tervezőirodáknak, rögzített átadási specifikációval\./);
-  assert.match(body, /Ön modellez\. Mi biztosítjuk a terepi felmérést és az egyeztetett pontfelhő-alapanyagot\./);
-  assert.match(body, /Épületfelmérés és pontfelhő/);
-  assert.match(body, /Ipari és gépészeti tér felmérés/);
-  assert.match(body, /Scan-to-BIM együttműködés/);
-  assert.match(body, /Feladat és kimenet egyeztetése/);
-  assert.match(body, /E57 vagy más pontfelhő formátum/);
-  assert.match(body, /Ellenőrzött felmérési dokumentáció/);
-  assert.match(body, /Egyeztetett Scan-to-BIM munkacsomag/);
+  assert.match(body, /<h1>Ön modellez\. Mi felmérünk\.<\/h1>/);
+  assert.match(body, /Terepi 3D felmérés és egyeztetett pontfelhő-átadás a saját tervezési munkafolyamatához\./);
+  assert.match(body, /Átadási specifikáció/);
+  assert.match(body, /Pontfelhő a saját folyamathoz/);
+  assert.match(body, /A modell külön döntés/);
+  assert.match(body, /href="#specifikacio"/);
+  assert.match(body, /href="\/pontfelho-atadas"/);
   assert.match(body, /2016–2026 \(R\) Minden jog fenntartva\./);
   assert.match(body, /<a href="\/">3dscantobim\.hu<\/a>/);
   assert.match(body, /<a href="\/kapcsolat#projektigeny">Írjon nekünk<\/a>/);
@@ -107,8 +104,9 @@ test('a főoldal a kért üzenetet és a három szolgáltatást mutatja', async 
   assert.match(body, /property="og:title"/);
   assert.match(body, /name="twitter:card"/);
   assert.match(body, /application\/ld\+json/);
-  assert.match(body, /Küldje el a felmérési specifikációt/);
-  assert.match(body, /Kérjen minta-anyagot/);
+  assert.match(body, /Projektet egyeztetek/);
+  assert.doesNotMatch(body, /Kérjen minta-anyagot/);
+  assert.doesNotMatch(body, /500\s?ezer|1 millió pont|2 millió pont|2,2|VZ-600i|RTC360|Trimble X9/);
   assert.doesNotMatch(body, /milliméter pontos/);
   assert.doesNotMatch(body, /garantált pontosság/);
   assert.doesNotMatch(body, /nulla hiba/);
@@ -263,4 +261,66 @@ test('érvényes projektigény visszaigazolást ad, és az admin CSV-be exportá
   assert.equal(injected.status, 303);
   const csv2 = await (await fetch(base + '/admin/export.csv', { headers: { cookie } })).text();
   assert.match(csv2, /'=1\+1/);
+  assert.match(csv2, /Specifikáció hivatkozása/);
+});
+
+test('a rövid projektbrief műszaki adatok nélkül is rögzül', async () => {
+  const created = await fetch(base + '/projektigeny', {
+    method: 'POST',
+    headers: { 'content-type': 'application/x-www-form-urlencoded' },
+    body: new URLSearchParams({
+      contact_name: 'Rövid Partner',
+      email: 'rovid@example.com',
+      comment: 'Irodaház földszintje a saját modellhez.',
+      consent: 'igen',
+    }),
+    redirect: 'manual',
+  });
+  assert.equal(created.status, 303);
+  const row = db.listLeads({ q: 'rovid@example.com' })[0];
+  assert.equal(row.contact_name, 'Rövid Partner');
+  assert.equal(row.partner_name, 'Rövid Partner');
+  assert.equal(row.file_size, '');
+  assert.equal(row.location, '');
+  assert.equal(row.spec_reference, '');
+  assert.equal(row.comment, 'Irodaház földszintje a saját modellhez.');
+});
+
+test('az átadás nem keveri a formátumokat és nem ígér mintát vagy műszerszámot', async () => {
+  const { publicInstrumentClaims } = require('../src/content/claims');
+  assert.equal(publicInstrumentClaims().length, 0);
+  const delivery = await text('/pontfelho-atadas');
+  assert.equal(delivery.response.status, 200);
+  for (const item of [
+    'Felmérendő terület és kritikus részletek',
+    'Szükséges pontosság és részletesség',
+    'Koordinátarendszer, origó és mértékegység',
+    'Regisztráció és ellenőrzés',
+    'Exportformátum',
+    'Állományok bontása és méretkezelése',
+    'Képi dokumentáció',
+    'Hozzáférési korlátok és takarások',
+    'Átadási ütem és elfogadási szempontok',
+    'Terepi adatfelvétel',
+    'Regisztrált pontfelhő',
+    'Tervezésre előkészített adatcsomag',
+  ]) {
+    assert.match(delivery.body, new RegExp(item));
+  }
+  assert.match(delivery.body, /Az E57 átadása nem BIM-modell/);
+  assert.match(delivery.body, /Modellcsere, nem pontfelhő/);
+  assert.match(delivery.body, /Saját műszerparkot nem állítunk/);
+  assert.doesNotMatch(delivery.body, /500000|1000000|2000000|2\.2|VZ-600i|RTC360|Trimble X9/);
+  assert.doesNotMatch(delivery.body, /href="[^"]+\.(e57|rcp|ifc|rvt|pln)"/i);
+  assert.doesNotMatch(delivery.body, /letöltés|download/i);
+  const samples = await text('/minta-anyagok');
+  assert.match(samples.body, /nincs letöltés/);
+  assert.doesNotMatch(samples.body, /href="[^"]+\.(e57|rcp|ifc|rvt|pln)"/i);
+  const home = await text('/');
+  const hrefs = [...home.body.matchAll(/href="(\/[^"#?]*)/g)].map((match) => match[1]);
+  const unique = [...new Set(hrefs)].filter((href) => href !== '/admin' && !href.startsWith('/admin'));
+  for (const href of unique) {
+    const page = await text(href);
+    assert.equal(page.response.status, 200, href);
+  }
 });

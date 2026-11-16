@@ -55,6 +55,7 @@ function openDatabase(file) {
       coordinate_system TEXT NOT NULL DEFAULT '',
       accuracy TEXT NOT NULL DEFAULT '',
       file_size TEXT NOT NULL DEFAULT '',
+      spec_reference TEXT NOT NULL DEFAULT '',
       comment TEXT NOT NULL DEFAULT '',
       consent INTEGER NOT NULL DEFAULT 0,
       status TEXT NOT NULL DEFAULT 'uj',
@@ -63,6 +64,10 @@ function openDatabase(file) {
   `);
   db.exec('CREATE INDEX IF NOT EXISTS idx_leads_submitted ON leads(submitted_at)');
   db.exec('CREATE INDEX IF NOT EXISTS idx_leads_status ON leads(status)');
+  const columns = db.prepare('PRAGMA table_info(leads)').all();
+  if (!columns.some((column) => column.name === 'spec_reference')) {
+    db.exec("ALTER TABLE leads ADD COLUMN spec_reference TEXT NOT NULL DEFAULT ''");
+  }
 
   const insert = db.prepare(`
     INSERT INTO leads (
@@ -70,14 +75,14 @@ function openDatabase(file) {
       utm_source, utm_medium, utm_campaign, utm_term, utm_content,
       partner_name, contact_name, email, phone, company,
       project_type, building_type, location, schedule, output_request,
-      software, coordinate_system, accuracy, file_size, comment,
+      software, coordinate_system, accuracy, file_size, spec_reference, comment,
       consent, status, mail_status
     ) VALUES (
       ?, ?, ?, ?,
       ?, ?, ?, ?, ?,
       ?, ?, ?, ?, ?,
       ?, ?, ?, ?, ?,
-      ?, ?, ?, ?, ?,
+      ?, ?, ?, ?, ?, ?,
       ?, ?, ?
     )
   `);
@@ -114,6 +119,7 @@ function openDatabase(file) {
         lead.coordinate_system,
         lead.accuracy,
         lead.file_size,
+        lead.spec_reference || '',
         lead.comment,
         lead.consent ? 1 : 0,
         lead.status || 'uj',
