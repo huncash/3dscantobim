@@ -21,7 +21,8 @@ const {
   page,
   organizationLd,
   operatorLd,
-  professionalServiceLd,
+  websiteLd,
+  serviceLd,
   faqLd,
   articleLd,
   graph,
@@ -76,6 +77,18 @@ function createApp(options = {}) {
       const ms = Number(process.hrtime.bigint() - started) / 1e6;
       console.log(`${new Date().toISOString()} ${req.method} ${req.path} ${res.statusCode} ${ms.toFixed(1)}ms`);
     });
+    next();
+  });
+
+  app.use((req, res, next) => {
+    const host = String(req.headers.host || '').toLowerCase().replace(/:\d+$/, '');
+    if (host === 'www.3dscantobim.hu') {
+      res.redirect(301, `${config.publicOrigin}${req.originalUrl}`);
+      return;
+    }
+    if (!config.seoIndex || req.path.startsWith('/admin') || req.path === '/koszonjuk' || req.path === '/healthz') {
+      res.setHeader('X-Robots-Tag', 'noindex, nofollow');
+    }
     next();
   });
 
@@ -149,9 +162,10 @@ function createApp(options = {}) {
   });
 
   app.get('/robots.txt', (req, res) => {
-    res.type('text/plain').send(
-      `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /koszonjuk\n\nSitemap: ${config.siteUrl}/sitemap.xml\n`
-    );
+    const body = config.seoIndex
+      ? `User-agent: *\nAllow: /\nDisallow: /admin\nDisallow: /koszonjuk\nDisallow: /healthz\n\nSitemap: ${config.publicOrigin}/sitemap.xml\n`
+      : 'User-agent: *\nDisallow: /\n';
+    res.type('text/plain').send(body);
   });
 
   app.get('/sitemap.xml', (req, res) => {
@@ -174,8 +188,8 @@ function createApp(options = {}) {
     ];
     const body = urls
       .map((item) => {
-        const loc = `${config.siteUrl}${item.path}`;
-        const lastmod = item.published || '2026-11-09';
+        const loc = `${config.publicOrigin}${item.path === '/' ? '/' : item.path}`;
+        const lastmod = item.updated || item.published;
         return `  <url><loc>${loc}</loc><lastmod>${lastmod}</lastmod></url>`;
       })
       .join('\n');
@@ -190,7 +204,7 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: pages.PAGES.home,
       body: pages.renderHome({ formHtml: renderLeadForm({ values: presetFromQuery(req.query) }) }),
-      jsonLd: [graph([organizationLd(config), professionalServiceLd(config), faqLd(HOME_FAQ)])],
+      jsonLd: [graph([websiteLd(config), organizationLd(config), serviceLd(config), faqLd(HOME_FAQ)])],
     }));
   });
 
@@ -203,9 +217,22 @@ function createApp(options = {}) {
     ['/folyamat', pages.PAGES.process, pages.renderProcess],
     ['/arak', pages.PAGES.pricing, pages.renderPricing],
   ];
+  const serviceRoutes = new Set([
+    '/terepi-felmeres',
+    '/pontfelho-atadas',
+    '/scan-to-bim',
+    '/partneri-egyuttmukodes',
+    '/folyamat',
+  ]);
   for (const [route, meta, render] of simple) {
     app.get(route, (req, res) => {
-      send(res, 200, page({ config, nonce: res.locals.nonce, meta, body: render() }));
+      send(res, 200, page({
+        config,
+        nonce: res.locals.nonce,
+        meta,
+        body: render(),
+        jsonLd: serviceRoutes.has(route) ? [graph([serviceLd(config)])] : [graph([websiteLd(config)])],
+      }));
     });
   }
 
@@ -223,7 +250,7 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: pages.PAGES.faq,
       body: pages.renderFaqPage(),
-      jsonLd: [graph([faqLd(FAQ)])],
+      jsonLd: [graph([websiteLd(config), faqLd(FAQ)])],
     }));
   });
 
@@ -236,7 +263,7 @@ function createApp(options = {}) {
         formHtml: renderLeadForm({ values: presetFromQuery(req.query) }),
         config,
       }),
-      jsonLd: [graph([professionalServiceLd(config)])],
+      jsonLd: [graph([websiteLd(config), serviceLd(config)])],
     }));
   });
 
@@ -246,6 +273,7 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: pages.PAGES.privacy,
       body: pages.renderPrivacy(config),
+      jsonLd: [graph([operatorLd(config)])],
     }));
   });
 
@@ -275,6 +303,7 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: pages.PAGES.articles,
       body: pages.renderArticlesIndex(),
+      jsonLd: [graph([websiteLd(config)])],
     }));
   });
 
@@ -295,8 +324,10 @@ function createApp(options = {}) {
       nonce: res.locals.nonce,
       meta: {
         path: article.path,
-        title: `${article.title} | 3dscantobim.hu`,
+        title: article.title,
         description: article.description,
+        shareTitle: article.title,
+        shareDescription: article.description,
         crumb: article.title,
       },
       body: pages.renderArticle(article),

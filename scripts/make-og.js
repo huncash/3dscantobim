@@ -43,10 +43,18 @@ const FONT = {
   U: [17, 17, 17, 17, 17, 17, 14],
   V: [17, 17, 17, 17, 17, 10, 4],
   Y: [17, 17, 10, 4, 4, 4, 4],
+  Z: [31, 1, 2, 4, 8, 16, 31],
+  ',': [0, 0, 0, 0, 0, 2, 4],
   '0': [14, 17, 19, 21, 25, 17, 14],
   '1': [4, 12, 4, 4, 4, 4, 14],
   '2': [14, 17, 1, 2, 4, 8, 31],
   '3': [30, 1, 1, 14, 1, 1, 30],
+  a: [0, 0, 14, 1, 15, 17, 15],
+  c: [0, 0, 14, 16, 16, 16, 14],
+  n: [0, 0, 22, 25, 17, 17, 17],
+  o: [0, 0, 14, 17, 17, 17, 14],
+  s: [0, 0, 15, 16, 14, 1, 30],
+  t: [4, 4, 31, 4, 4, 4, 6],
   ' ': [0, 0, 0, 0, 0, 0, 0],
   '.': [0, 0, 0, 0, 0, 12, 12],
   '-': [0, 0, 0, 14, 0, 0, 0],
@@ -69,6 +77,24 @@ function drawText(text, x, y, scale, color) {
     }
     cursor += 6 * scale;
   }
+  return cursor;
+}
+
+function drawMarked(text, marks, x, y, scale, color) {
+  let cursor = x;
+  [...text].forEach((char, index) => {
+    drawText(char, cursor, y, scale, color);
+    const mark = marks[index];
+    if (mark === 'dots') {
+      fill(cursor + scale, y - 3 * scale, scale, scale, color[0], color[1], color[2]);
+      fill(cursor + 3 * scale, y - 3 * scale, scale, scale, color[0], color[1], color[2]);
+    }
+    if (mark === 'acute') {
+      fill(cursor + 3 * scale, y - 3 * scale, scale, scale, color[0], color[1], color[2]);
+      fill(cursor + 4 * scale, y - 4 * scale, scale, scale, color[0], color[1], color[2]);
+    }
+    cursor += 6 * scale;
+  });
 }
 
 fill(0, 0, W, H, 21, 32, 51);
@@ -78,11 +104,10 @@ for (let y = 150; y < 450; y += 24) fill(72, y, 640, 1, 211, 219, 228);
 for (let x = 72; x < 712; x += 24) fill(x, 150, 1, 300, 211, 219, 228);
 fill(72, 150, 8, 300, 31, 78, 121);
 
-const title = '3D SCAN TO BIM';
-drawText(title, 96, 190, 6, [21, 32, 51]);
-drawText('TEREPI FELMERES', 96, 270, 4, [31, 78, 121]);
-drawText('PONTFELHO ATADAS', 96, 320, 4, [31, 78, 121]);
-drawText('EGYEZTETETT ATADAS', 96, 390, 3, [154, 78, 36]);
+drawText('3D scan to BIM', 96, 180, 5, [21, 32, 51]);
+drawMarked('ON MODELLEZ.', { 0: 'dots' }, 96, 250, 4, [21, 32, 51]);
+drawMarked('MI FELMERUNK.', { 7: 'acute', 9: 'dots' }, 96, 310, 4, [21, 32, 51]);
+drawText('PONTFELHO, NEM MODELL', 96, 390, 3, [154, 78, 36]);
 
 const rand = (() => {
   let seed = 42;
@@ -91,13 +116,15 @@ const rand = (() => {
     return (seed - 1) / 2147483646;
   };
 })();
-for (let i = 0; i < 700; i += 1) {
-  const x = 760 + Math.floor(rand() * 360);
-  const y = 140 + Math.floor(rand() * 360);
-  const inBuilding = x > 820 && x < 1080 && y > 180 && y < 460 && (y > 300 || (x > 900 && x < 1020));
-  if (!inBuilding && rand() > 0.35) continue;
-  const shade = inBuilding ? 232 : 170;
-  fill(x, y, 3, 3, shade, shade + 8, 240);
+fill(860, 470, 8, 46, 215, 222, 234);
+fill(820, 508, 88, 8, 215, 222, 234);
+fill(888, 430, 10, 10, 208, 106, 63);
+for (let i = 0; i < 900; i += 1) {
+  const x = 760 + Math.floor(rand() * 380);
+  const y = 120 + Math.floor(rand() * 360);
+  if (rand() > 0.55) continue;
+  const shade = 176 + Math.floor(rand() * 60);
+  fill(x, y, 3, 3, shade, shade + 6, 236);
 }
 drawText('3DSCANT0BIM.HU'.replace('0', 'O'), 72, 520, 3, [215, 222, 234]);
 

@@ -1,4 +1,5 @@
 const test = require('node:test');
+const http = require('http');
 const assert = require('node:assert/strict');
 const fs = require('fs');
 const os = require('os');
@@ -22,6 +23,7 @@ process.env.TRUST_PROXY = '0';
 process.env.NODE_ENV = 'test';
 
 const { createApp } = require('../src/server');
+const { resolveSeo } = require('../src/seo');
 
 let server;
 let base;
@@ -74,6 +76,8 @@ async function text(pathname) {
 }
 
 test('a konfiguráció a 7000-es porton és a saját adatfájlon áll', () => {
+  assert.equal(config.seoIndex, false);
+  assert.equal(config.publicOrigin, 'https://3dscantobim.hu');
   assert.equal(config.port, 7000);
   assert.equal(config.bindHost, '127.0.0.1');
   assert.equal(config.dataFile, path.resolve(process.env.DATA_FILE));
@@ -101,6 +105,16 @@ test('a főoldal a kért üzenetet és a három kiemelést mutatja', async () =>
   assert.match(body, /<img class="footer-logo" src="\/images\/adp-top-logo\.png" alt="ADP-TOP" width="239" height="108">/);
   assert.doesNotMatch(body, /ADP-TOP Kft|Híradó utca|4712|Főtevékenység/);
   assert.match(body, /https:\/\/bim\.vrgo\.hu\//);
+  assert.match(body, /<title>3D felmérés és pontfelhő BIM-hez \| 3D scan to BIM<\/title>/);
+  assert.match(body, /class="brand-logo" src="\/images\/logo\.png" alt="3D scan to BIM"/);
+  assert.match(body, /class="slip-brand">3D scan to BIM</);
+  assert.match(body, /property="og:site_name" content="3D scan to BIM"/);
+  assert.match(body, /"name":"3D scan to BIM"/);
+  assert.doesNotMatch(body, /3D Scan to BIM|3D SCAN TO BIM/);
+  assert.match(body, /Terepi 3D felmérés tervezőirodáknak és BIM-modellezőknek/);
+  assert.match(body, /rel="canonical" href="https:\/\/3dscantobim\.hu\/"/);
+  assert.match(body, /noindex,nofollow/);
+  assert.doesNotMatch(body, /127\.0\.0\.1|localhost|:7000/);
   assert.match(body, /property="og:title"/);
   assert.match(body, /name="twitter:card"/);
   assert.match(body, /application\/ld\+json/);
@@ -169,11 +183,83 @@ test('a sitemap és a robots a nyilvános címeket kezeli', async () => {
   const site = await text('/sitemap.xml');
   assert.match(site.body, /pontfelho-atadas/);
   assert.match(site.body, /hogyan-ellenorizheto-egy-pontfelho-minosege/);
-  assert.doesNotMatch(site.body, /\/admin/);
-  assert.doesNotMatch(site.body, /koszonjuk/);
+  assert.match(site.body, /<loc>https:\/\/3dscantobim\.hu\/pontfelho-atadas<\/loc>/);
+  assert.match(site.body, /<lastmod>2026-11-17<\/lastmod>/);
+  assert.match(site.body, /<lastmod>2026-11-09<\/lastmod>/);
+  assert.doesNotMatch(site.body, /\/admin|koszonjuk|127\.0\.0\.1|localhost|:7000/);
   const robots = await text('/robots.txt');
-  assert.match(robots.body, /Disallow: \/admin/);
-  assert.match(robots.body, /Sitemap: http:\/\/127\.0\.0\.1:7000\/sitemap\.xml/);
+  assert.match(robots.body, /Disallow: \//);
+  assert.doesNotMatch(robots.body, /127\.0\.0\.1|Sitemap:/);
+});
+
+test('a keresési cím, a canonical és a megosztás nem a helyi hostra mutat', async () => {
+  assert.deepEqual(resolveSeo({ siteUrl: 'http://127.0.0.1:7000', nodeEnv: 'production', seoIndex: 'igen' }), {
+    publicOrigin: 'https://3dscantobim.hu',
+    indexable: false,
+  });
+  assert.deepEqual(resolveSeo({ siteUrl: 'https://3dscantobim.hu', nodeEnv: 'production', seoIndex: 'igen' }), {
+    publicOrigin: 'https://3dscantobim.hu',
+    indexable: true,
+  });
+  assert.equal(resolveSeo({ siteUrl: 'https://3dscantobim.hu', nodeEnv: 'production', seoIndex: '' }).indexable, false);
+  const pages = ['/', '/terepi-felmeres', '/pontfelho-atadas', '/scan-to-bim', '/partneri-egyuttmukodes', '/cikkek'];
+  const titles = new Set();
+  const descriptions = new Set();
+  for (const pathname of pages) {
+    const { body } = await text(pathname);
+    const title = body.match(/<title>([^<]+)<\/title>/)[1];
+    const description = body.match(/<meta name="description" content="([^"]+)"/)[1];
+    assert.equal(titles.has(title), false, title);
+    assert.equal(descriptions.has(description), false, description);
+    titles.add(title);
+    descriptions.add(description);
+    assert.match(body, new RegExp(`rel="canonical" href="https://3dscantobim\\.hu${pathname === '/' ? '/' : pathname}"`));
+    assert.match(body, /og:image" content="https:\/\/3dscantobim\.hu\/images\/og\.png"/);
+    assert.match(body, /summary_large_image/);
+    assert.match(body, /hu_HU/);
+    assert.match(body, /og:image:width" content="1200"/);
+    assert.doesNotMatch(body, /127\.0\.0\.1|localhost|:7000|openingHours|aggregateRating|Review/);
+    assert.equal((body.match(/<h1>/g) || []).length, 1);
+  }
+  const home = await text('/?utm_source=teszt&utm_campaign=seo');
+  assert.match(home.body, /rel="canonical" href="https:\/\/3dscantobim\.hu\/"/);
+  assert.doesNotMatch(home.body, /canonical" href="[^"]*utm/);
+  const slash = await fetch(base + '/gyik/', { redirect: 'manual' });
+  assert.equal(slash.status, 301);
+  assert.equal(slash.headers.get('location'), '/gyik');
+  const www = await new Promise((resolve, reject) => {
+    const req = http.request(
+      {
+        hostname: '127.0.0.1',
+        port: server.address().port,
+        path: '/pontfelho-atadas',
+        headers: { host: 'www.3dscantobim.hu' },
+      },
+      (res) => resolve(res)
+    );
+    req.on('error', reject);
+    req.end();
+  });
+  assert.equal(www.statusCode, 301);
+  assert.equal(www.headers.location, 'https://3dscantobim.hu/pontfelho-atadas');
+  const missing = await text('/nincs-ilyen-felmeres');
+  assert.equal(missing.response.status, 404);
+  assert.match(missing.body, /noindex/);
+  const icons = ['/favicon.ico', '/favicon.svg', '/favicon-32.png', '/favicon-16.png', '/apple-touch-icon.png', '/icon-192.png', '/icon-512.png', '/images/logo.png', '/images/og.png'];
+  for (const icon of icons) {
+    const file = await fetch(base + icon);
+    assert.equal(file.status, 200, icon);
+  }
+  const og = await fs.promises.readFile(path.join(__dirname, '..', 'public', 'images', 'og.png'));
+  assert.equal(og.readUInt32BE(16), 1200);
+  assert.equal(og.readUInt32BE(20), 630);
+  const delivery = await text('/pontfelho-atadas');
+  assert.match(delivery.body, /"@type":"Service"/);
+  assert.match(delivery.body, /nem BIM-modell/);
+  assert.doesNotMatch(delivery.body, /ProfessionalService|openingHours/);
+  const admin = await text('/admin');
+  assert.match(admin.body, /noindex,nofollow/);
+  assert.match(admin.response.headers.get('x-robots-tag'), /noindex/);
 });
 
 test('a elírt partneri cím átirányít', async () => {

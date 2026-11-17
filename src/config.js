@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { resolveSeo, verificationToken } = require('./seo');
 
 const PLACEHOLDER_TOKENS = new Set([
   'cserelje-le-egy-hosszu-veletlen-szovegre',
@@ -69,14 +70,20 @@ function loadConfig() {
     throw new Error('A BIND_HOST egy hosztnév vagy IP-cím legyen.');
   }
   const siteUrl = String(env('SITE_URL', 'https://3dscantobim.hu')).replace(/\/+$/, '');
+  const nodeEnv = env('NODE_ENV', 'development');
+  const seo = resolveSeo({ siteUrl, nodeEnv, seoIndex: env('SEO_INDEX', '') });
   const adminToken = env('ADMIN_TOKEN', '');
   const sessionSecret = env('SESSION_SECRET', '') || `s7bim:${adminToken}:session`;
   return {
     siteName: env('SITE_NAME', '3dscantobim'),
     siteUrl,
+    publicOrigin: seo.publicOrigin,
+    seoIndex: seo.indexable,
+    googleSiteVerification: verificationToken(env('GOOGLE_SITE_VERIFICATION', '')),
+    bingSiteVerification: verificationToken(env('BING_SITE_VERIFICATION', '')),
     port,
     bindHost,
-    nodeEnv: env('NODE_ENV', 'development'),
+    nodeEnv,
     trustProxy: boolEnv('TRUST_PROXY', false),
     dataFile: resolveDatabasePath(),
     contactEmail: env('CONTACT_EMAIL', 'info@3dscantobim.hu').trim(),
@@ -108,7 +115,7 @@ function loadConfig() {
       !PLACEHOLDER_TOKENS.has(adminToken.toLowerCase()),
     sessionSecret,
     retentionMonths: Number.parseInt(env('RETENTION_MONTHS', '24'), 10) || 24,
-    assetVersion: '7',
+    assetVersion: '9',
   };
 }
 

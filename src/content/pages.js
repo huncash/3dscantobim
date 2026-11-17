@@ -4,110 +4,150 @@ const { ARTICLES } = require('./articles');
 const { ctaBand } = require('../form');
 const { HANDOFF_ITEMS, SERVICE_LEVELS, PENDING_APPROVAL, publicInstrumentClaims } = require('./claims');
 
+const UPDATED = '2026-11-17';
+
 const PAGES = {
   home: {
     path: '/',
-    title: 'Terepi felmérés és pontfelhő BIM-csapatoknak | 3dscantobim.hu',
+    title: '3D felmérés és pontfelhő BIM-hez | 3D scan to BIM',
     description:
-      'Terepi 3D felmérés és egyeztetett pontfelhő-átadás a saját tervezési munkafolyamathoz. A modellkészítés nem automatikus.',
+      'Terepi 3D felmérés tervezőirodáknak és BIM-modellezőknek. Egyeztetett pontfelhő-átadás, formátum és műszaki tartalom. Küldje el projektigényét!',
+    shareTitle: 'Ön modellez. Mi felmérünk. | 3D scan to BIM',
+    shareDescription:
+      'Terepi 3D felmérés és egyeztetett pontfelhő-átadás a tervezőiroda saját munkafolyamatához. A modell nem az alapcsomag.',
     crumb: 'Főoldal',
+    updated: UPDATED,
   },
   field: {
     path: '/terepi-felmeres',
-    title: 'Terepi felmérés épülethez és ipari térhez | 3dscantobim.hu',
+    title: 'Terepi felmérés épülethez és ipari térhez',
     description:
-      'Épületfelmérés és ipari, gépészeti terek felmérése modellező partnereknek. A lefedettséget és a kizárásokat a feladat szerint rögzítjük.',
+      'Helyszíni adatfelvétel BIM-csapatoknak: szintek, homlokzat és gépház. Amit nem lehetett bejárni, az kizárásként kerül az átadásba.',
+    shareTitle: 'Terepi munka a modellező partnernek',
+    shareDescription: 'Épület és ipari tér felmérése a saját tervezési folyamathoz. A modell ettől még a partner feladata.',
     crumb: 'Terepi felmérés',
+    updated: UPDATED,
   },
   delivery: {
     path: '/pontfelho-atadas',
-    title: 'Pontfelhő átadás E57 és egyeztetett formátumban | 3dscantobim.hu',
+    title: 'Regisztrált pontfelhő és átadási specifikáció',
     description:
-      'Átadási specifikáció: terület, pontosság, koordináta, regisztráció, formátum és elfogadás. Az E57 pontfelhő, nem BIM-modell.',
+      'Formátum, koordináta, ellenőrzés és elfogadás előre egyeztetve. Az E57 pontfelhő-állomány, nem kész BIM-modell.',
+    shareTitle: 'Egyeztetett pontfelhő-átadás',
+    shareDescription: 'A specifikáció mondja meg, mit adunk át és mi marad a partner modellezése. Az IFC nem pontfelhő.',
     crumb: 'Pontfelhő átadás',
+    updated: UPDATED,
   },
   scan: {
     path: '/scan-to-bim',
-    title: 'Scan-to-BIM együttműködés, külön munkacsomag | 3dscantobim.hu',
+    title: 'Scan-to-BIM adatfelvétel, a modell külön csomag',
     description:
-      'A Scan-to-BIM nem része minden felmérésnek. Ha kérik, a szoftvert, az elemkört és a pontfelhőben maradó részeket előre rögzítjük.',
+      'A felmérés nem készít automatikusan Revit- vagy Archicad-modellt. Modellezési csomag csak külön rögzített határral készül.',
+    shareTitle: 'Scan-to-BIM: előbb az adat, a modell külön',
+    shareDescription: 'A domain neve nem ígér minden projekthez kész modellt. A natív fájl csak külön, jóváhagyott csomagban lehet téma.',
     crumb: 'Scan-to-BIM',
+    updated: UPDATED,
   },
   partner: {
     path: '/partneri-egyuttmukodes',
-    title: 'Partneri együttműködés modellező irodáknak | 3dscantobim.hu',
+    title: 'Felmérő partner tervezőirodáknak',
     description:
-      'Terepi kapacitás BIM-csapatoknak, tervezőirodáknak, generáltervezőknek és nagyobb kivitelezőknek, rögzített adatátadással.',
+      'Kiszervezett terepi kapacitás BIM-modellező irodáknak, generáltervezőknek és mérnöki csapatoknak, rögzített pontfelhő-átadással.',
+    shareTitle: 'Felmérő partner, nem helyettes modellezőcsapat',
+    shareDescription: 'A terepi munkát vesszük át. A sablon, a szabvány és a modell a partnernél marad, ha a modellezést nem kérik külön.',
     crumb: 'Partneri együttműködés',
+    updated: UPDATED,
   },
   samples: {
     path: '/minta-anyagok',
-    title: 'Minta anyagok és átadási formátumok | 3dscantobim.hu',
+    title: 'Átadási formátumok, letölthető minta nélkül',
     description:
-      'Formátumjegyzet a pontfelhő-átadáshoz. Publikálható mintaállomány és letöltés ezen az oldalon nincs.',
+      'Az E57, az IFC és a natív modell külön csoport. Publikálható mintaállomány és letöltés ezen az oldalon nincs.',
+    shareTitle: 'Formátumok, fájlletöltés nélkül',
+    shareDescription: 'Pontfelhő, csereformátum és natív modell nem ugyanaz. Mintaállományt az oldal nem ad.',
     crumb: 'Minta anyagok',
+    updated: UPDATED,
   },
   process: {
     path: '/folyamat',
-    title: 'Hogyan zajlik a terepi együttműködés | 3dscantobim.hu',
+    title: 'A felmérés menete az egyeztetéstől az átadásig',
     description:
-      'Specifikáció, helyszíni felmérés, feldolgozás, majd átadás a megbeszélt formátumban. Hiányos briefre nem adunk találgatott árat.',
+      'Először a specifikáció, utána a helyszín, majd a vállalt ellenőrzés és a megbeszélt export. Hiányos briefre nem adunk árat.',
+    shareTitle: 'Hogyan készül a terepi átadás',
+    shareDescription: 'A folyamat a rögzített kimenethez igazodik. Azonnali ár és automatikus szerződés nincs.',
     crumb: 'Folyamat',
+    updated: UPDATED,
   },
   pricing: {
     path: '/arak',
-    title: 'Árazási logika felmérési projekthez | 3dscantobim.hu',
+    title: 'Mi mozgatja egy terepi felmérés árát',
     description:
-      'Az árat a helyszín, a hozzáférés, a kimenet és az ütem együtt adja. Nincs kalkulátor és nincs azonnali ár hiányos specifikációra.',
+      'A helyszín, a hozzáférés, a kért kimenet és az ütem együtt adja az árat. Kalkulátor és azonnali díj nincs.',
+    shareTitle: 'Ár csak tisztázott felmérési brief után',
+    shareDescription: 'Nem árazunk teljes BIM-modellt elemkör nélkül, és nem árazunk hatósági munkarészt.',
     crumb: 'Árak',
+    updated: UPDATED,
   },
   faq: {
     path: '/gyik',
-    title: 'Gyakori kérdések a pontfelhő-átadásról | 3dscantobim.hu',
+    title: 'Kérdések a pontfelhőről és a modell határáról',
     description:
-      'Scan-to-BIM, formátum, koordinátarendszer, pontosság és az, amit nem vállalunk. Rövid válaszok modellező partnereknek.',
+      'Mi tartozik a felméréshez, mi marad a partner modellezése, és mit nem vállalunk. Rövid válaszok tervezőirodáknak.',
+    shareTitle: 'Gyakori kérdések a felmérés határáról',
+    shareDescription: 'A Scan-to-BIM nem automatikus. Az E57 pontfelhő, az IFC pedig nem helyettesíti.',
     crumb: 'GYIK',
+    updated: UPDATED,
   },
   contact: {
     path: '/kapcsolat',
-    title: 'Projektigény és kapcsolat | 3dscantobim.hu',
+    title: 'Projektigény terepi felméréshez',
     description:
-      'Projektet egyeztetünk: név, e-mail és rövid leírás. A műszaki adatok opcionálisak, árat az űrlap nem ad.',
+      'Név, e-mail és rövid leírás elég az első megkereséshez. A műszaki mezők opcionálisak, árat az űrlap nem ad.',
+    shareTitle: 'Küldje el a felmérési projektigényt',
+    shareDescription: 'Rövid brief tervezőirodáknak. Pontfelhőt az űrlap nem fogad, szerződést nem hoz létre.',
     crumb: 'Kapcsolat',
+    updated: UPDATED,
   },
   privacy: {
     path: '/adatvedelem',
-    title: 'Adatkezelési tájékoztató | 3dscantobim.hu',
+    title: 'Adatkezelési tájékoztató a projektigényhez',
     description:
-      'Hogyan kezeli a 3dscantobim.hu a projektigény űrlapján megadott partneri adatokat. Az adatkezelő azonosítása a tájékoztatóban szerepel.',
+      'A 3dscantobim.hu projektigényének adatkezelője, a kezelt mezők és a megőrzés. Hírlevelet nem küldünk.',
     crumb: 'Adatvédelem',
+    updated: UPDATED,
   },
   impressum: {
     path: '/impresszum',
-    title: 'Impresszum | 3dscantobim.hu',
+    title: 'Impresszum és a szolgáltató azonosítása',
     description:
-      'A 3dscantobim.hu szolgáltatójának azonosító adatai és elérhetősége. Az üzemeltető adatai az ÁSZF-ben is szerepelnek.',
+      'A 3dscantobim.hu szolgáltatójának azonosító adatai és telefonos elérhetősége. Az üzemeltető az ÁSZF-ben is szerepel.',
     crumb: 'Impresszum',
+    updated: UPDATED,
   },
   terms: {
     path: '/aszf',
-    title: 'ÁSZF, üzemeltető adatai | 3dscantobim.hu',
+    title: 'ÁSZF: az üzemeltető adatai',
     description:
-      'A 3dscantobim.hu üzemeltetőjének azonosító adatai. A projektigény elküldése nem hoz létre szerződést.',
+      'Az oldal üzemeltetőjének azonosító adatai. A projektigény elküldése nem hoz létre szerződést.',
     crumb: 'ÁSZF',
+    updated: UPDATED,
   },
   articles: {
     path: '/cikkek',
-    title: 'Tudnivalók modellező partnereknek | 3dscantobim.hu',
+    title: 'Szakmai tudástár a terepi felmérésről',
     description:
-      'Cikkek a terepi felmérésről, a pontfelhő ellenőrzéséről, az IFC és a Revit szerepéről, valamint a Scan-to-BIM együttműködésről.',
+      'Jegyzetek a modellezőnek: mit várjon a felméréstől, hogyan válik el a pontfelhő az IFC-től, és mikor érdemes kiszervezni a helyszínt.',
+    shareTitle: 'Tudástár modellező irodáknak',
+    shareDescription: 'Nem szoftverletöltés és nem modellkönyvtár. A cikkek a terepi átadás rendjéről szólnak.',
     crumb: 'Tudnivalók',
+    updated: UPDATED,
   },
   thanks: {
     path: '/koszonjuk',
-    title: 'A projektigényt rögzítettük | 3dscantobim.hu',
-    description: 'A felmérési specifikáció beérkezett. Ajánlatot a hiányzó adatok tisztázása után küldünk.',
+    title: 'A projektigényt rögzítettük',
+    description: 'A megkeresés beérkezett. Ajánlatot a hiányzó adatok tisztázása után küldünk.',
     crumb: 'Visszaigazolás',
+    updated: UPDATED,
   },
 };
 
@@ -153,7 +193,7 @@ function renderHome({ formHtml }) {
       <aside class="titleblock" aria-label="Átadási lap, röviden">
         <header>
           <span>Átadási lap</span>
-          <span>3dscantobim</span>
+          <span class="slip-brand">3D scan to BIM</span>
         </header>
         <dl>
           <dt>Kimenet</dt><dd>egyeztetett pontfelhő</dd>

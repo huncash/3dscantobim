@@ -10,66 +10,81 @@ const NAV = [
   ['/arak', 'Árak'],
 ];
 
-const OG_ALT = '3dscantobim.hu – terepi felmérés és pontfelhő BIM-modellező csapatoknak';
+const BRAND = '3D scan to BIM';
+const OG_ALT = '3D scan to BIM logó.';
 
-function organizationLd(config) {
+function originOf(config) {
+  return config.publicOrigin || 'https://3dscantobim.hu';
+}
+
+function websiteLd(config) {
+  const origin = originOf(config);
   return {
-    '@type': 'Organization',
-    '@id': `${config.siteUrl}/#szervezet`,
-    name: config.siteName,
-    url: config.siteUrl,
-    email: safeEmail(config.contactEmail) || undefined,
-    telephone: config.contactPhone || undefined,
+    '@type': 'WebSite',
+    '@id': `${origin}/#weboldal`,
+    name: BRAND,
+    alternateName: '3dscantobim.hu',
+    url: `${origin}/`,
+    inLanguage: 'hu-HU',
+    publisher: { '@id': `${origin}/#uzemelteto` },
   };
 }
 
-function operatorLd(config) {
-  return {
-    ...organizationLd(config),
-    legalName: config.companyLegalName,
-    taxID: config.companyTaxId,
-    vatID: config.companyEuTaxId,
-    address: {
+function organizationLd(config, { legal = false } = {}) {
+  const origin = originOf(config);
+  const email = safeEmail(config.contactEmail);
+  const node = {
+    '@type': 'Organization',
+    '@id': `${origin}/#uzemelteto`,
+    name: legal ? config.companyLegalName : 'ADP-TOP',
+    url: `${origin}/`,
+    logo: `${origin}/images/adp-top-logo.png`,
+    email: email || undefined,
+    telephone: config.contactPhone || undefined,
+  };
+  if (legal) {
+    node.legalName = config.companyLegalName;
+    node.taxID = config.companyTaxId;
+    node.vatID = config.companyEuTaxId;
+    node.address = {
       '@type': 'PostalAddress',
       streetAddress: config.companySeat,
       addressCountry: 'HU',
-    },
-  };
+    };
+  }
+  return node;
 }
 
-function professionalServiceLd(config) {
+function operatorLd(config) {
+  return organizationLd(config, { legal: true });
+}
+
+function serviceLd(config) {
+  const origin = originOf(config);
   return {
-    '@type': 'ProfessionalService',
-    '@id': `${config.siteUrl}/#szolgaltatas`,
-    name: `${config.siteName} – terepi felmérés és pontfelhő`,
-    url: config.siteUrl,
-    image: `${config.siteUrl}/images/og.png`,
+    '@type': 'Service',
+    '@id': `${origin}/#szolgaltatas`,
+    name: 'Terepi 3D felmérés és pontfelhő-átadás',
+    serviceType: 'Terepi felmérés BIM-modellező irodáknak',
+    url: `${origin}/`,
+    image: `${origin}/images/og.png`,
     description:
-      'Terepi felmérés és egyeztetett pontfelhő-átadás BIM-modellező csapatoknak és tervezőirodáknak. A Scan-to-BIM külön, rögzített munkacsomag.',
-    telephone: config.contactPhone || undefined,
-    email: safeEmail(config.contactEmail) || undefined,
+      'Terepi 3D felmérés és egyeztetett pontfelhő-átadás tervezőirodáknak. Az E57 pontfelhő-állomány, nem BIM-modell. A modellkészítés nem része automatikusan a felmérésnek.',
+    provider: { '@id': `${origin}/#uzemelteto` },
+    brand: { '@type': 'Brand', name: BRAND },
     areaServed: { '@type': 'Country', name: 'Magyarország' },
-    provider: { '@id': `${config.siteUrl}/#szervezet` },
-    knowsAbout: [
-      'Scan-to-BIM',
-      'pontfelhő',
-      'terepi felmérés',
-      'BIM-modellezés',
-      'IFC',
-      'Revit',
-      'Archicad',
-    ],
   };
 }
 
 function breadcrumbLd(config, crumbs) {
+  const origin = originOf(config);
   return {
     '@type': 'BreadcrumbList',
     itemListElement: crumbs.map((crumb, index) => ({
       '@type': 'ListItem',
       position: index + 1,
       name: crumb.name,
-      item: `${config.siteUrl}${crumb.path}`,
+      item: `${origin}${crumb.path}`,
     })),
   };
 }
@@ -92,11 +107,11 @@ function articleLd(config, article) {
     description: article.description,
     inLanguage: 'hu',
     datePublished: article.published,
-    dateModified: article.published,
-    mainEntityOfPage: `${config.siteUrl}${article.path}`,
-    author: { '@type': 'Organization', name: config.siteName },
-    publisher: { '@id': `${config.siteUrl}/#szervezet` },
-    image: `${config.siteUrl}/images/og.png`,
+    dateModified: article.updated || article.published,
+    mainEntityOfPage: `${originOf(config)}${article.path}`,
+    author: { '@id': `${originOf(config)}/#uzemelteto` },
+    publisher: { '@id': `${originOf(config)}/#uzemelteto` },
+    image: `${originOf(config)}/images/og.png`,
   };
 }
 
@@ -109,6 +124,8 @@ function layout({
   nonce,
   title,
   description,
+  shareTitle,
+  shareDescription,
   path,
   body,
   robots = 'index,follow',
@@ -116,7 +133,22 @@ function layout({
   jsonLd = [],
   ogType = 'website',
 }) {
-  const canonical = `${config.siteUrl}${path}`;
+  const origin = originOf(config);
+  const canonical = `${origin}${path === '/' ? '/' : path}`;
+  const image = `${origin}/images/og.png`;
+  const socialTitle = shareTitle || title;
+  const socialDescription = shareDescription || description;
+  const robotsContent = config.seoIndex ? robots : 'noindex,nofollow';
+  const verification = [
+    config.googleSiteVerification
+      ? `<meta name="google-site-verification" content="${esc(config.googleSiteVerification)}">`
+      : '',
+    config.bingSiteVerification
+      ? `<meta name="msvalidate.01" content="${esc(config.bingSiteVerification)}">`
+      : '',
+  ]
+    .filter(Boolean)
+    .join('\n  ');
   const phoneHref = telHref(config.contactPhone);
   const email = safeEmail(config.contactEmail);
   const nav = NAV.map(
@@ -140,26 +172,33 @@ function layout({
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>${esc(title)}</title>
   <meta name="description" content="${esc(description)}">
-  <meta name="robots" content="${esc(robots)}">
+  <meta name="robots" content="${esc(robotsContent)}">
   <link rel="canonical" href="${esc(canonical)}">
   <link rel="alternate" hreflang="hu" href="${esc(canonical)}">
+  <link rel="alternate" hreflang="x-default" href="${esc(canonical)}">
+  ${verification}
   <meta name="theme-color" content="#152033">
   <meta property="og:type" content="${esc(ogType)}">
   <meta property="og:locale" content="hu_HU">
-  <meta property="og:site_name" content="${esc(config.siteName)}">
-  <meta property="og:title" content="${esc(title)}">
-  <meta property="og:description" content="${esc(description)}">
+  <meta property="og:site_name" content="${BRAND}">
+  <meta property="og:title" content="${esc(socialTitle)}">
+  <meta property="og:description" content="${esc(socialDescription)}">
   <meta property="og:url" content="${esc(canonical)}">
-  <meta property="og:image" content="${esc(config.siteUrl)}/images/og.png">
+  <meta property="og:image" content="${esc(image)}">
+  <meta property="og:image:type" content="image/png">
   <meta property="og:image:width" content="1200">
   <meta property="og:image:height" content="630">
   <meta property="og:image:alt" content="${esc(OG_ALT)}">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="${esc(title)}">
-  <meta name="twitter:description" content="${esc(description)}">
-  <meta name="twitter:image" content="${esc(config.siteUrl)}/images/og.png">
+  <meta name="twitter:title" content="${esc(socialTitle)}">
+  <meta name="twitter:description" content="${esc(socialDescription)}">
+  <meta name="twitter:image" content="${esc(image)}">
   <meta name="twitter:image:alt" content="${esc(OG_ALT)}">
+  <link rel="icon" href="/favicon.ico" sizes="any">
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="manifest" href="/site.webmanifest">
   <link rel="stylesheet" href="/css/site.css?v=${esc(config.assetVersion)}">
   ${scripts}
@@ -169,7 +208,7 @@ function layout({
   <header class="site-header">
     <div class="topbar">
       <div class="wrap utility">
-        <p>3dscantobim · terepi felmérés és pontfelhő</p>
+        <p>3D scan to BIM · terepi felmérés és pontfelhő</p>
         <p class="utility-links">
           <a href="/cikkek">Tudnivalók</a>
           <a href="/gyik">GYIK</a>
@@ -180,18 +219,7 @@ function layout({
     </div>
     <div class="wrap header-main">
       <a class="brand" href="/">
-        <span class="mark" aria-hidden="true">
-          <svg viewBox="0 0 48 48" width="36" height="36">
-            <rect x="4" y="4" width="40" height="40" fill="none" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M14 34V18l10-6 10 6v16" fill="none" stroke="currentColor" stroke-width="1.6"/>
-            <path d="M14 24h20M24 12v22" fill="none" stroke="currentColor" stroke-width="1.2"/>
-            <circle cx="24" cy="24" r="1.6" fill="currentColor"/>
-          </svg>
-        </span>
-        <span>
-          <strong>3dscantobim</strong>
-          <small>terepi felmérés és pontfelhő</small>
-        </span>
+        <img class="brand-logo" src="/images/logo.png" alt="3D scan to BIM" width="673" height="164">
       </a>
       <input class="nav-toggle" id="nav-toggle" type="checkbox">
       <label class="nav-button" for="nav-toggle">Menü</label>
@@ -276,6 +304,8 @@ function page({ config, nonce, meta, body, crumbs, jsonLd, robots, ogType }) {
     nonce,
     title: meta.title,
     description: meta.description,
+    shareTitle: meta.shareTitle,
+    shareDescription: meta.shareDescription,
     path: meta.path,
     body,
     crumbs: trail,
@@ -290,7 +320,8 @@ module.exports = {
   page,
   operatorLd,
   organizationLd,
-  professionalServiceLd,
+  websiteLd,
+  serviceLd,
   breadcrumbLd,
   faqLd,
   articleLd,

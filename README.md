@@ -51,7 +51,7 @@ npm ci --omit=dev
 npm start
 ```
 
-A `NODE_ENV=production` a `.env` fájlban állítható. A statikus fájlok a `public/` könyvtárból mennek. Az Open Graph kép a `public/images/og.png`; újragenerálása: `npm run og`.
+A `NODE_ENV=production` a `.env` fájlban állítható. A statikus fájlok a `public/` könyvtárból mennek. Az Open Graph kép a `public/images/og.png`, a fejléc logója a `public/images/logo.png`. Mindkettő a felső sávból kivágott márkalogó; újragenerálás: `npm run og`.
 
 Ellenőrzés telepítés előtt:
 
@@ -146,7 +146,17 @@ A lista szűrhető, a státusz módosítható, a CSV a `/admin/export.csv` címe
 
 ## SEO
 
-Minden nyilvános oldal saját title és description szöveget kap, Open Graph és Twitter Card tagekkel. A `sitemap.xml` és a `robots.txt` a `SITE_URL` alapján, kérésre készül, ezért a kanonikus cím a környezethez igazodik. Az admin és a visszaigazoló oldal nincs a térképen. A főoldalon Organization, ProfessionalService és FAQPage, a GYIK oldalon FAQPage, a cikkeken Article séma van.
+A kanonikus cím, a megosztási kép és a sitemap mindig `https://3dscantobim.hu`. Helyi cím, `127.0.0.1` és a `7000`-es port nem kerül a nyilvános SEO-adatokba. A perjeles útvonal 301-gyel a perjel nélküli címre megy, a `www` a minta nginxben és az alkalmazásban is az apexre. Az UTM és más lekérdezési paraméter nem része a kanonikus címnek.
+
+Indexelés csak akkor van, ha egyszerre igaz: `NODE_ENV=production`, `SITE_URL=https://3dscantobim.hu` és `SEO_INDEX=igen`. Fejlesztői és teszt környezet `noindex`. A `robots.txt` nem helyettesíti az admin jelszót. Az admin, a `/koszonjuk` és a `/healthz` nincs a sitemapben.
+
+Search Console HTML-igazolás: `GOOGLE_SITE_VERIFICATION`, csak ha már van token. A jelenlegi éles főoldalon ilyen meta nem volt, ezért a kódban nincs beégetett érték. Domain property DNS-igazolás, tulajdonosi hozzáféréssel: TXT rekord a `3dscantobim.hu` gyökerére, a Search Console által kiadott `google-site-verification=...` értékkel. Sikeres igazolás után a sitemap címe `https://3dscantobim.hu/sitemap.xml`, majd URL Inspection a főoldalra, a `/pontfelho-atadas` és a `/partneri-egyuttmukodes` címre. Ezt a fiókban nem küldtük be.
+
+Bing: `BING_SITE_VERIFICATION` a `msvalidate.01` meta, üresen nem jelenik meg. IndexNow nincs bekötve, amíg nincs ellenőrzött kulcsfájl. Google Indexing API-t szolgáltatásoldalakra nem használunk.
+
+Google cégprofil: a meglévő vrgo.hu profilhoz tartozik a kapcsolat. Új profilt nem hozunk létre, a fő weboldalt, a nevet, a címet, a kategóriát és a nyitvatartást nem írjuk felül. A H–P 8:00–19:00 telefonos elérhetőség, nem ügyfélfogadás. Jóváhagyásra váró javaslat, ha a profil támogatja a bejegyzést: egy poszt a `https://3dscantobim.hu/pontfelho-atadas` címre, a fő weboldal mező változtatása nélkül. Ellenőrzött profil-URL nincs a kódban, ezért a kapcsolatoldalra nem került ilyen link.
+
+A fejléc, a borítókép és a favicon a felső sávból kivágott 3D scan to BIM logó. Az ADP-TOP lábléclogó ettől külön, a szolgáltató jele marad.
 
 A partneri együttműködés kanonikus címe `/partneri-egyuttmukodes`. A briefben elírt `/partneri-egytuutmuves` 301-gyel ide mutat.
 
